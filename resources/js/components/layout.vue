@@ -48,7 +48,7 @@ export default {
     props: ['guest'],
     data: function(){
         return {
-            log: true,
+            logged: true,
             username: "teste"
         };
     },
@@ -58,8 +58,13 @@ export default {
     },
     methods: {
         logout: function () {
-            this.log = true;
-        }   
+            axios.post('/api/logout').then(response => {
+                    console.log('User has logged out')
+            })
+            .catch(error => {
+                console.log('Invalid Logout')
+            })
+        }  
 
     }
 }
