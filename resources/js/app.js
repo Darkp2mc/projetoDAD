@@ -8,8 +8,10 @@ Vue.use(VueRouter);
 
 
 import LayoutComponent from './components/layout'
+import LoginComponent from './components/login'
 
 const routes = [
+	{ path: '/login', component: LoginComponent },
 	{ path: '/', component: LayoutComponent }
 ]
 
