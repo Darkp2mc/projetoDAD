@@ -24,6 +24,8 @@
 		</div>
 		<div class="form-group">
 			<a class="btn btn-default" v-on:click.prevent="login" >Login</a>
+			<div class="btn btn-xs btn-danger" v-if="faildMessage"></div>
+      <strong>{{ faildMessage }}</strong>
 		</div>
 	</div>
 </template>
@@ -35,8 +37,9 @@
 				credentials: {
 					email: '',
 					password: ''
-				}
+				},faildMessage:""
 			}
+
 		},
 		methods: {
 			login () {
@@ -48,6 +51,7 @@
 				 	})
 					.catch(error => {
 						console.log('Invalid Authentication')
+						this.faildMessage="Invalid Authentication"
 					})
 				})
 			}
