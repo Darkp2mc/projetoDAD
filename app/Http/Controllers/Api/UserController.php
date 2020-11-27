@@ -2,28 +2,41 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Resourses\User as UserResource;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Resources\User as UserResource;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
 
+
 class UserController extends Controller
 {
+    public function index(Request $request)
+    {
+        if ($request->has('page')) {
+            return UserResource::collection(User::paginate(5));
+        } else {
+            return UserResource::collection(User::all());
+        }
+        /*Caso não se pretenda fazer uso de Eloquent API Resources (https://laravel.com/docs/5.5/eloquent-resources), é possível implementar com esta abordagem:
+        if ($request->has('page')) {
+            return User::with('department')->paginate(5);;
+        } else {
+            return User::with('department')->get();;
+        }*/
+    }
+
     public function me(Request $request){
     	return Auth::user();
     }
-
 
     public function show(User $user)
     {
         return new UserResource($user);
     }
-
-
-
 
     public function store(StoreUserRequest $request)
     {

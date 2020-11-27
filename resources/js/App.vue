@@ -1,5 +1,6 @@
 <template>
     <div>
+		<router-link to="/products">Products</router-link> - 
     	<router-link to="/login">Login</router-link>
     	<a href="#" @click.prevent="logout">Logout</a>
     	<a v-if="logged" href="#" @click.prevent="myself">Myself</a>
@@ -10,9 +11,11 @@
 
 <script>
 import LayoutComponent from './components/layout'
+import ProductComponent from "./components/product";
 export default {
 		components: {
-			'layout': LayoutComponent
+			'layout': LayoutComponent,
+			product : ProductComponent
 		},
 		data: {
 			logged: null

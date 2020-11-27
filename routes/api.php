@@ -28,3 +28,8 @@ Route::post('login', [AuthController::class, 'login']);
 Route::post('logout', [AuthController::class, 'logout']);
 
 Route::get('users',[User::class,'index']);
+
+Route::get('products',[UserController::class,'index']);
+Route::get('products/{product}',[UserController::class, 'show']);
+Route::post('products',[UserController::class, 'store']);
+Route::put('products/{product}',[UserController::class, 'update']);
