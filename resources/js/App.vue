@@ -17,8 +17,10 @@ export default {
 			'layout': LayoutComponent,
 			product : ProductComponent
 		},
-		data: {
+		data: function(){
+			return{
 			logged: null
+			};
 		},
 		methods: {
 			logout () {

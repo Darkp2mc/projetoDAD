@@ -25,7 +25,9 @@ const router = new VueRouter({
 new Vue({
 	router,
 	render: h => h(App),
-	data:{
-		products: []
+	data:function(){
+		return{
+			products: []
+		};
 	}
 }).$mount('#app')

@@ -1,7 +1,9 @@
 <template>
-  <table class="table table-striped">
+<div class="table-responsive">
+  <table class="table table-hover">
     <thead>
       <tr>
+        <th>Product</th>
         <th>Name</th>
         <th>Type</th>
         <th>Description</th>
@@ -13,6 +15,7 @@
         :key="product.id"
         :class="{active: editingProduct === product}"
       >
+        <td>{{ product.photo_url }}</td>
         <td>{{ product.name }}</td>
         <td>{{ product.type }}</td>
         <td>{{ product.description }}</td>
@@ -37,6 +40,7 @@
       </tr>
     </tbody>
   </table>
+  </div>
 </template>
 
 <script>

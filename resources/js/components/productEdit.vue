@@ -9,7 +9,47 @@
         v-model="product.name"
         name="name"
         id="inputName"
-        placeholder="Fullname"
+        placeholder="Product name"
+        value=""
+      />
+      <label for="inputType">Type</label>
+      <input
+        type="text"
+        class="form-control"
+        v-model="product.type"
+        name="type"
+        id="inputType"
+        placeholder="Product Type"
+        value=""
+      />
+      <label for="inputDescription">Description</label>
+      <input
+        type="text"
+        class="form-control"
+        v-model="product.description"
+        name="description"
+        id="inputDescription"
+        placeholder="Product Description"
+        value=""
+      />
+      <label for="inputPhoto">Photo URL</label>
+      <input
+        type="text"
+        class="form-control"
+        v-model="product.photo_url"
+        name="photo_url"
+        id="inputPhoto"
+        placeholder="Product Photo"
+        value=""
+      />
+      <label for="inputPrice">Price</label>
+      <input
+        type="text"
+        class="form-control"
+        v-model="product.price"
+        name="price"
+        id="inputPrice"
+        placeholder="Product Price"
         value=""
       />
     </div>
@@ -28,10 +68,10 @@
 
 <script>
 export default {
-  props: ['products'],
+  props: ['product'],
   methods: {
     saveProduct: function () {
-      axios.put('api/products/' + this.product.name, this.product)
+      axios.put('api/products/' + this.product.id, this.product)
         .then(response => {
           // Copy object properties from response.data.data to this.user
           // without creating a new reference
@@ -40,7 +80,7 @@ export default {
         })
     },
     cancelEdit: function () {
-      axios.get('api/products/' + this.product.name)
+      axios.get('api/products/' + this.product.id)
         .then(response => {
           // Copy object properties from response.data.data to this.user
           // without creating a new reference

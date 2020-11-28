@@ -6,6 +6,9 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\UserController as User;
 use App\Http\Controllers\Api\UserController;
 
+use App\Http\Controllers\ProductController as Product;
+use App\Http\Controllers\Api\ProductController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -21,15 +24,23 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::middleware('auth:api')->get('/product', function (Request $request) {
+    return $request->product();
+});
+
 Route::middleware('auth:sanctum')->get('users',[User::class, 'index']);
-Route:: middleware('auth:sanctum')->get('users/me', [UserController::class, 'me']);
+Route::middleware('auth:sanctum')->get('users/me', [UserController::class, 'me']);
 
-Route::post('login', [AuthController::class, 'login']);
-Route::post('logout', [AuthController::class, 'logout']);
+Route::middleware('auth:sanctum')->get('products',[Product::class, 'index']);
 
-Route::get('users',[User::class,'index']);
+Route::post('login',             [AuthController::class, 'login']);
+Route::post('logout',            [AuthController::class, 'logout']);
 
-Route::get('products',[UserController::class,'index']);
-Route::get('products/{product}',[UserController::class, 'show']);
-Route::post('products',[UserController::class, 'store']);
-Route::put('products/{product}',[UserController::class, 'update']);
+Route::get('users',              [UserController::class,'index']);
+
+Route::get('products',                    [ProductController::class, 'index']);
+Route::get('products/{product}',          [ProductController::class, 'show']);
+
+Route::post('products',                   [ProductController::class, 'store']);
+Route::put('products/{product}',          [ProductController::class, 'update']);
+Route::delete('products/{product}',       [ProductController::class, 'destroy']);
