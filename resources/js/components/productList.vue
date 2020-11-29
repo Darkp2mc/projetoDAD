@@ -7,6 +7,7 @@
         <th>Name</th>
         <th>Type</th>
         <th>Description</th>
+        <th>Price</th>
       </tr>
     </thead>
     <tbody>
@@ -19,6 +20,7 @@
         <td>{{ product.name }}</td>
         <td>{{ product.type }}</td>
         <td>{{ product.description }}</td>
+        <td>{{ product.price }}€</td>
         <td>
           <a
             class="btn btn-sm btn-success"
@@ -29,10 +31,12 @@
             
           >Remover</a>
           <a
+            v-if="logged"
             class="btn btn-xs btn-primary"
             v-on:click.prevent="editProduct(product)"
           >Edit</a>
           <a
+            v-if="logged"
             class="btn btn-xs btn-danger"
             v-on:click.prevent="deleteProduct(product)"
           >Delete</a>
@@ -45,7 +49,7 @@
 
 <script>
 export default {
-  props: ['products', 'selectedProduct'],
+  props: ['products', 'selectedProduct', 'user'],
   data: function () {
     return {
       editingProduct: null

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="index">
 		<router-link to="/products">Products</router-link> - 
     	<router-link to="/login">Login</router-link>
     	<a href="#" @click.prevent="logout">Logout</a>
