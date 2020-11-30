@@ -23,7 +23,7 @@ class User extends JsonResource
             'email_verified_at' => $this->email_verified_at->toDateTimeString(),
             'created_at'        => $this->created_at->toDateTimeString(),
             'updated_at'        => $this->updated_at->toDateTimeString(),
-            'deleted_at'        => $this->deleted_at->toDateTimeString(),
+            'deleted_at'        => $this->deleted_at
         ];
     }
 }

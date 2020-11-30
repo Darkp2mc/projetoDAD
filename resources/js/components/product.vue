@@ -86,20 +86,7 @@ export default {
     }
   },
   mounted () {
-    this.getProducts()
-    // Se já existe o array com departamentos no $root.departments
-    // Não vale a pena voltar a carregar os departamentos da API:
-    /*
-    if (this.$root.products.length === 0) {
-      axios.get('api/products')
-        .then(response => {
-          this.$root.products = response.data.data
-          this.products = this.$root.products
-        })
-    } else {
-      this.products = this.$root.products
-    }
-    */
+    this.getProducts();
   }
 }
 </script>

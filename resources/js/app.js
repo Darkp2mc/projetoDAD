@@ -46,9 +46,9 @@ loginButton.on('click', function () {
 
 
 const routes = [
+	{ path: '/', redirect: '/products' },
 	{ path: '/login', component: LoginComponent },
-	{ path: '/products', component: ProductComponent },
-	{ path: '/', redirect: '/welcome' }
+	{ path: '/products', component: ProductComponent }
 ]
 
 const router = new VueRouter({
@@ -58,12 +58,7 @@ const router = new VueRouter({
 
 new Vue({
 	router,
-	render: h => h(App),
-	data: function () {
-		return {
-			products: []
-		};
-	}
+	render: h => h(App)
 }).$mount('#app')
 
 

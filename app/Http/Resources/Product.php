@@ -22,7 +22,8 @@ class Product extends JsonResource
             'photo_url'     => $this->photo_url,
             'price'         => $this->price,
             'created_at'    => $this->created_at->toDateTimeString(),
-            'updated_at'    => $this->updated_at->toDateTimeString()
+            'updated_at'    => $this->updated_at->toDateTimeString(),
+            'deleted_at'    => $this->deleted_at
         ];
     }
 }

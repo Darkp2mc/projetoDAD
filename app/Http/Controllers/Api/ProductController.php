@@ -68,16 +68,16 @@ class ProductController extends Controller
     //     $user->update($request->all());
     //     return new UserResource($user);
     // }
-
+    /*
     public function destroy(Product $product)
     {
         $product->delete();
         return response()->json(null, 204);
+    }*/
+    public function destroy($id)
+    {
+        $product = Product::findOrFail($id);
+        $product->delete();
+        return response()->json(null, 204);
     }
-    // public function destroy($id)
-    // {
-    //     $user = User::findOrFail($id);
-    //     $user->delete();
-    //     return response()->json(null, 204);
-    // }
 }

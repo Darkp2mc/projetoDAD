@@ -24,11 +24,11 @@ class StoreProductRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|regex:/^[A-Za-záàâãéèêíóôõúçÁÀÂÃÉÈÍÓÔÕÚÇ ]+$/',
+            'name'          => 'required',
             'type'          => 'required',
             'description'   => 'required',
             'photo_url'     => 'required',
-            'price'         => 'required|float',
+            'price'         => 'required',
         ];
     }
 }

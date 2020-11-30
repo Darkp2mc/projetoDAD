@@ -32,16 +32,7 @@
         placeholder="Product Description"
         value=""
       />
-      <label for="inputPhoto">Photo URL</label>
-      <input
-        type="text"
-        class="form-control"
-        v-model="product.photo_url"
-        name="photo_url"
-        id="inputPhoto"
-        placeholder="Product Photo"
-        value=""
-      />
+      
       <label for="inputPrice">Price</label>
       <input
         type="text"
@@ -73,10 +64,9 @@ export default {
     saveProduct: function () {
       axios.put('api/products/' + this.product.id, this.product)
         .then(response => {
-          // Copy object properties from response.data.data to this.user
-          // without creating a new reference
           Object.assign(this.product, response.data.data)
           this.$emit('product-saved', this.product)
+          alert("Product saved");
         })
     },
     cancelEdit: function () {
@@ -86,6 +76,7 @@ export default {
           // without creating a new reference
           Object.assign(this.product, response.data.data)
           this.$emit('product-canceled', this.product)
+          alert("Product canceled");
         })
     }
   }
