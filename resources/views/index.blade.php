@@ -145,15 +145,8 @@
 
 <body>
 
-    <div class="center">
-        <p id="text">Food Home</p>
-        <a id="text" class="login" href="#/login">Login</a>
-        <p id="text" class="welcome">Welcome!</p>
-        <a id="text" class="products" href="#/products">Products</a>
-    </div>
-
     <div class="container" id="app">
-        /*v-bind:guest="true"
+        <!-- v-bind:guest="true"
 
         @guest
         <Layout v-bind:guest="true"> </Layout>
@@ -161,7 +154,7 @@
         <Layout v-bind:guest="false"> </Layout>
         @endguest
 
-        */
+        -->
     </div>
 
     <script src="js/app.js"></script>

@@ -1,5 +1,6 @@
 <template>
     <div class="index">
+    	<router-link to="/">Welcome</router-link>
 		<router-link to="/products">Products</router-link> - 
     	<router-link to="/login">Login</router-link>
     	<a href="#" @click.prevent="logout">Logout</a>
@@ -12,9 +13,10 @@
 <script>
 import LayoutComponent from './components/layout'
 import ProductComponent from "./components/product";
+import WelcomeComponent from "./components/welcome";
 export default {
 		components: {
-			'layout': LayoutComponent,
+			layout: LayoutComponent,
 			product : ProductComponent
 		},
 		data: function(){
