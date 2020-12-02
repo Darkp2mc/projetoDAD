@@ -47,7 +47,7 @@
 					axios.post('/api/login', this.credentials).then(response => {
 						console.log('User has loggeg in')
 						console.dir(response.data)
-						this.$router.push('/')
+						this.$router.push('/products')
 				 	})
 					.catch(error => {
 						console.log('Invalid Authentication')
