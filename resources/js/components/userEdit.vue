@@ -25,33 +25,8 @@
         value=""
       />
     </div>
-    <div class="form-group">
-      <label for="inputAge">Age</label>
-      <input
-        type="number"
-        class="form-control"
-        v-model="user.age"
-        name="age"
-        id="inputAge"
-        placeholder="Age"
-        value=""
-      />
-    </div>
-    <div class="form-group">
-      <label for="department_id">Department:</label>
-      <select
-        class="form-control"
-        id="department_id"
-        name="department_id"
-        v-model="user.type"
-      >
-        <option
-          v-for="department in departments"
-          v-bind:value="department.id"
-          v-bind:key="department.id"
-        > {{ department.name }} </option>
-      </select>
-    </div>
+    
+   
 
     <div class="form-group">
       <a
@@ -68,7 +43,7 @@
 
 <script>
 export default {
-  props: ['user', 'departments'],
+  props: ['user'],
   methods: {
     saveUser: function () {
       axios.put('api/users/' + this.user.id, this.user)

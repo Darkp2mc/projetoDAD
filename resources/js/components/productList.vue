@@ -3,7 +3,7 @@
   <div class="table-responsive">
     <router-link to="/cart">Cart</router-link> -
     <router-link to="/login">Login</router-link>
-    <a v-if="this.$route.logged" href="#" @click.prevent="logout">Logout</a>
+    <router-link to="/products">Logout</router-link>
     <a v-if="logged" href="#" @click.prevent="myself">Myself</a>
     <hr/>
     <table class="table table-hover">

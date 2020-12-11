@@ -1,7 +1,7 @@
 <template>
   <div id="menuOptions" class="index">
     <router-view></router-view>
-    <hr/>
+    <hr />
   </div>
 </template>
 
@@ -16,50 +16,8 @@ export default {
   components: {
     layout: LayoutComponent,
     user: UserComponent,
-	product: ProductComponent,
-	cart: CartComponent,
-  },
-  data() {
-    return {
-      welcomePage: false,
-      logged: false,
-    };
-  },
-  methods: {
-    logout() {
-      axios
-        .post("/api/logout")
-        .then((response) => {
-          console.log("User has logged out");
-        })
-        .catch((error) => {
-          console.log("Invalid Logout");
-        });
-    },
-    myself() {
-      axios
-        .get("/api/users/me")
-        .then((response) => {
-          console.log("User currently logged:");
-          console.dir(response.data);
-        })
-        .catch((error) => {
-          console.log("Invalid Request");
-        });
-    },
-  },
-  mounted: function () {
-    /*axios
-      .get("/api/users/me")
-      .then((response) => {
-        console.log("User currently logged:");
-        console.dir(response.data);
-        this.logged = false;
-      })
-      .catch((error) => {
-        console.log("Invalid Request");
-        this.logged = true;
-      });*/
-  },
+    product: ProductComponent,
+    cart: CartComponent,
+  }
 };
 </script>

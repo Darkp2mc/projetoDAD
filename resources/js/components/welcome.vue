@@ -1,16 +1,22 @@
 <template>
   <div class="center">
     <p id="text">Food Home</p>
-    <a v-if="this.logged == null" id="text" class="login" href="#/login">Login</a>
+    <a v-if="this.logged == false" id="text" class="login" href="#/login">Login</a>
     <a
-      v-if="this.logged != null"
+      v-if="this.logged != false"
       id="text"
       class="login"
       href="#/welcome"
-      v-on:click.prevent="logout();reloadPage()"
+      v-on:click.prevent="
+        logout();
+        reloadPage();
+      "
       >Logout</a
     >
-    <p id="text" class="welcome">Welcome!</p>
+    <p v-if="this.logged == false" id="text" class="welcome">Welcome!</p>
+    <p v-if="this.logged != false" id="text" class="welcome">
+      Welcome back {{ this.currentUser.name }}!
+    </p>
     <a id="text" class="products" href="#/products">Products</a>
   </div>
 </template>
@@ -61,19 +67,22 @@ import WelcomeComponent from "./welcome.vue";
 export default {
   data() {
     return {
-      logged: null,
+      logged: false,
+      currentUser: "",
       welcomePage: true,
     };
   },
   methods: {
-    reloadPage(){
-    window.location.reload()
-  },
+    reloadPage() {
+      window.location.reload();
+    },
     logout() {
       axios
         .post("/api/logout")
         .then((response) => {
           alert("You logged out");
+          this.currentUser = "";
+          this.logged = false;
           console.log("User has logged out");
         })
         .catch((error) => {
@@ -93,17 +102,19 @@ export default {
         });
     },
   },
-  mounted: function () {
-    axios
+  mounted: async function () {
+    await axios
       .get("/api/users/me")
       .then((response) => {
         console.log("User currently logged:");
         console.dir(response.data);
         this.logged = true;
+        this.currentUser = response.data;
       })
       .catch((error) => {
         console.log("Invalid Request");
       });
+      //console.log("this.logged = "+this.logged);
   },
 };
 </script>

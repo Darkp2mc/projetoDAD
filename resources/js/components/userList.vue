@@ -6,7 +6,6 @@
     <hr/>
     <thead>
       <tr>
-        <th>User</th>
         <th>Name</th>
         <th>Email</th>
         <th>Department</th>

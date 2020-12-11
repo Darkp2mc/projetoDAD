@@ -47,6 +47,7 @@ export default {
       failMessage: '',
       currentUser: null,
       users: [],
+      logged: false,
       departments: []
     }
   },
