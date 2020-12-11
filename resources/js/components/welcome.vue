@@ -1,7 +1,15 @@
 <template>
   <div class="center">
     <p id="text">Food Home</p>
-    <a id="text" class="login" href="#/login">Login</a>
+    <a v-if="this.logged == null" id="text" class="login" href="#/login">Login</a>
+    <a
+      v-if="this.logged != null"
+      id="text"
+      class="login"
+      href="#/welcome"
+      v-on:click.prevent="logout();reloadPage()"
+      >Logout</a
+    >
     <p id="text" class="welcome">Welcome!</p>
     <a id="text" class="products" href="#/products">Products</a>
   </div>
@@ -16,7 +24,10 @@ var animationDelay = 6;
 menu.addClass("content-hidden").fadeOut();
 
 for (let i = 0; i < text.innerText.length; i++) {
-  newDom += '<span class="char">' + (text.innerText[i] == " " ? "&nbsp;" : text.innerText[i]) + "</span>";
+  newDom +=
+    '<span class="char">' +
+    (text.innerText[i] == " " ? "&nbsp;" : text.innerText[i]) +
+    "</span>";
 }
 
 text.innerHTML = newDom;
@@ -43,7 +54,6 @@ loginButton.on("click", function () {
 </script>
 
 <script>
-
 import LayoutComponent from "./layout.vue";
 import ProductComponent from "./product.vue";
 import WelcomeComponent from "./welcome.vue";
@@ -56,10 +66,14 @@ export default {
     };
   },
   methods: {
+    reloadPage(){
+    window.location.reload()
+  },
     logout() {
       axios
         .post("/api/logout")
         .then((response) => {
+          alert("You logged out");
           console.log("User has logged out");
         })
         .catch((error) => {
@@ -71,6 +85,7 @@ export default {
         .get("/api/users/me")
         .then((response) => {
           console.log("User currently logged:");
+          this.logged = true;
           console.dir(response.data);
         })
         .catch((error) => {
@@ -84,11 +99,10 @@ export default {
       .then((response) => {
         console.log("User currently logged:");
         console.dir(response.data);
-        this.logged = false;
+        this.logged = true;
       })
       .catch((error) => {
         console.log("Invalid Request");
-        this.logged = true;
       });
   },
 };

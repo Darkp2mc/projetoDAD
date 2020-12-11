@@ -38,8 +38,10 @@
 				credentials: {
 					email: '',
 					password: ''
-				},failedMessage:"",
-				welcomePage: false
+				},
+				failedMessage:"",
+				logged: false,
+				welcomePage: false,
 			}
 
 		},
@@ -51,11 +53,13 @@
 					axios.post('/api/login', this.credentials).then(response => {
 						console.log(this.credentials)
 						console.log('User has logged in')
+						this.$router.push('/products')
+						this.logged = true
 						console.dir(response.data)
 						
 				 	})
 					.catch(error => {
-						console.log('Invalid Authentication')
+						alert('Invalid Authentication')
 						this.failedMessage="Invalid Authentication"
 					})
 				})

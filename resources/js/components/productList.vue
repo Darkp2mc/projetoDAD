@@ -3,7 +3,7 @@
   <div class="table-responsive">
     <router-link to="/cart">Cart</router-link> -
     <router-link to="/login">Login</router-link>
-    <a v-if="logged" href="#" @click.prevent="logout">Logout</a>
+    <a v-if="this.$route.logged" href="#" @click.prevent="logout">Logout</a>
     <a v-if="logged" href="#" @click.prevent="myself">Myself</a>
     <hr/>
     <table class="table table-hover">
@@ -22,7 +22,6 @@
           :key="product.id"
           :class="{ active: editingProduct === product }"
         >
-          <img :src="product.photo_url" />
           <td>{{ product.name }}</td>
           <td>{{ product.type }}</td>
           <td>{{ product.description }}</td>
