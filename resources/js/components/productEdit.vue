@@ -69,6 +69,7 @@ export default {
           alert("Product saved");
         })
     },
+    
     cancelEdit: function () {
       axios.get('api/products/' + this.product.id)
         .then(response => {
@@ -79,6 +80,8 @@ export default {
           alert("Product canceled");
         })
     }
+
+
   }
 }
 </script>
