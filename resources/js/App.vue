@@ -22,7 +22,7 @@ export default {
   data() {
     return {
       welcomePage: false,
-      logged: null,
+      logged: false,
     };
   },
   methods: {
