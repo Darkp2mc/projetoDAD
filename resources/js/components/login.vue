@@ -1,5 +1,6 @@
 <template>
 	<div class="jumbotron">
+		<router-link to="/products">Products</router-link>
 		<h2>Login</h2>
 		<div class="form-group">
 			<label for="inputEmail">Email</label>
@@ -24,8 +25,8 @@
 		</div>
 		<div class="form-group">
 			<a class="btn btn-default" v-on:click.prevent="login" >Login</a>
-			<div class="btn btn-xs btn-danger" v-if="faildMessage"></div>
-      <strong>{{ faildMessage }}</strong>
+			<div class="btn btn-xs btn-danger" v-if="failedMessage"></div>
+      <strong>{{ failedMessage }}</strong>
 		</div>
 	</div>
 </template>
@@ -37,21 +38,25 @@
 				credentials: {
 					email: '',
 					password: ''
-				},faildMessage:""
+				},failedMessage:"",
+				welcomePage: false
 			}
 
 		},
 		methods: {
 			login () {
+				console.dir(this.credentials)
+				//mudar de página depois do login: this.$router.push('/products')
 				axios.get('/sanctum/csrf-cookie').then(response => {
 					axios.post('/api/login', this.credentials).then(response => {
-						console.log('User has loggeg in')
+						console.log(this.credentials)
+						console.log('User has logged in')
 						console.dir(response.data)
-						this.$router.push('/products')
+						
 				 	})
 					.catch(error => {
 						console.log('Invalid Authentication')
-						this.faildMessage="Invalid Authentication"
+						this.failedMessage="Invalid Authentication"
 					})
 				})
 			}

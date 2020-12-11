@@ -1,5 +1,11 @@
 <template>
+<div class="jumbotron">
   <div class="table-responsive">
+    <router-link to="/cart">Cart</router-link> -
+    <router-link to="/login">Login</router-link>
+    <a v-if="logged" href="#" @click.prevent="logout">Logout</a>
+    <a v-if="logged" href="#" @click.prevent="myself">Myself</a>
+    <hr/>
     <table class="table table-hover">
       <thead>
         <tr>
@@ -11,21 +17,34 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="product in products" :key="product.id" :class="{ active: editingProduct === product }">
-          <td>{{ product.photo_url }}</td>
+        <tr
+          v-for="product in products"
+          :key="product.id"
+          :class="{ active: editingProduct === product }"
+        >
+          <img :src="product.photo_url" />
           <td>{{ product.name }}</td>
           <td>{{ product.type }}</td>
           <td>{{ product.description }}</td>
           <td>{{ product.price }}€</td>
           <td>
-            <a class="btn btn-sm btn-success" v-on:click.prevent="addProduct(product)">Adicionar</a>
-            <a class="btn btn-sm btn-success" v-on:click.prevent="removeProduct(product)">Remover</a>
-            <a class="btn btn-xs btn-primary" v-on:click.prevent="editProduct(product)">Edit</a>
-            <a class="btn btn-xs btn-danger" v-on:click.prevent="deleteProduct(product)">Delete</a>
+            <a class="btn btn-sm btn-success" v-on:click.prevent="addProduct(product)"
+              >Adicionar</a
+            >
+            <a class="btn btn-sm btn-success" v-on:click.prevent="removeProduct(product)"
+              >Remover</a
+            >
+            <a class="btn btn-xs btn-primary" v-on:click.prevent="editProduct(product)"
+              >Edit</a
+            >
+            <a class="btn btn-xs btn-danger" v-on:click.prevent="deleteProduct(product)"
+              >Delete</a
+            >
           </td>
         </tr>
       </tbody>
     </table>
+  </div>
   </div>
 </template>
 

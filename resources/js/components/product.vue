@@ -4,89 +4,73 @@
       <h1>{{ title }}</h1>
     </div>
 
-    <product-list
-      :products="products"
-      :selected-product="currentProduct"
-      @edit-click="editProduct"
-      @delete-click="deleteProduct"
-    ></product-list>
+    <product-list :products="products" :selected-product="currentProduct" @edit-click="editProduct" @delete-click="deleteProduct"></product-list>
 
-    <div
-      class="alert alert-success"
-      v-if="showSuccess"
-    >
-      <button
-        type="button"
-        class="close-btn"
-        v-on:click="showSuccess=false"
-      >&times;</button>
+    <div class="alert alert-success" v-if="showSuccess">
+      <button type="button" class="close-btn" v-on:click="showSuccess = false">&times;</button>
       <strong>{{ successMessage }}</strong>
     </div>
 
-    <product-edit
-      v-if="currentProduct"
-      :product="currentProduct"
-      @product-saved="saveProduct"
-      @product-canceled="cancelEdit"
-    ></product-edit>
-  
+    <product-edit v-if="currentProduct" :product="currentProduct" @product-saved="saveProduct" @product-canceled="cancelEdit"></product-edit>
   </div>
 </template>
 
 <script>
-import ProductListComponent from './productList'
-import ProductEditComponent from './productEdit'
+import ProductListComponent from "./productList";
+import ProductEditComponent from "./productEdit";
 export default {
   components: {
-    'product-list': ProductListComponent,
-    'product-edit': ProductEditComponent,
+    "product-list": ProductListComponent,
+    "product-edit": ProductEditComponent,
   },
   data: function () {
     return {
-      title: 'List Products',
+      title: "List Products",
       showSuccess: false,
       showFailure: false,
-      successMessage: '',
-      failMessage: '',
+      successMessage: "",
+      failMessage: "",
       currentProduct: null,
-      products: []
-    }
+      welcomePage: false,
+      products: [],
+    };
   },
   methods: {
+    
     editProduct: function (product) {
-      this.currentProduct = product
-      this.showSuccess = false
+      this.currentProduct = product;
+      this.showSuccess = false;
     },
     deleteProduct: function (product) {
-      axios.delete('api/products/' + product.id)
-        .then(response => {
-          this.showSuccess = true
-          this.successMessage = 'Product Deleted'
-          this.getProducts()
-        })
+      axios.delete("api/products/" + product.id).then((response) => {
+        this.showSuccess = true;
+        this.successMessage = "Product Deleted";
+        this.getProducts();
+      });
     },
     saveProduct: function (product) {
-      this.showSuccess = true
-      this.successMessage = 'Product Saved'
+      this.showSuccess = true;
+      this.successMessage = "Product Saved";
       // Copies user properties to this.currentUser
       // without changing this.currentUser reference
-      Object.assign(this.currentProduct, product)
-      this.currentProduct = null
+      Object.assign(this.currentProduct, product);
+      this.currentProduct = null;
     },
     cancelEdit: function (product) {
-      this.showSuccess = false
+      this.showSuccess = false;
       // Copies user properties to this.currentUser
       // without changing this.currentUser reference
-      Object.assign(this.currentProduct, product)
-      this.currentProduct = null
+      Object.assign(this.currentProduct, product);
+      this.currentProduct = null;
     },
     getProducts: function () {
-      axios.get('api/products')
-        .then(response => { this.products = response.data.data })
+      axios.get("api/products").then((response) => {
+        this.products = response.data.data;
+      });
     }
   },
-  mounted () {
+  mounted() {
     this.getProducts();
-  }
-}
+  },
+};
 </script>

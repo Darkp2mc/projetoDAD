@@ -1,52 +1,95 @@
 <template>
-	<div class="center">
-        <p id="text">Food Home</p>
-        <a id="text" class="login" href="#/login">Login</a>
-        <p id="text" class="welcome">Welcome!</p>
-        <a id="text" class="products" href="#/products">Products</a>
-    </div>
+  <div class="center">
+    <p id="text">Food Home</p>
+    <a id="text" class="login" href="#/login">Login</a>
+    <p id="text" class="welcome">Welcome!</p>
+    <a id="text" class="products" href="#/products">Products</a>
+  </div>
 </template>
 
 <script>
-	var text = document.getElementById('text');
-	var newDom = '';
-	var animationDelay = 6;
+var menu = document.getElementsByName("menuOptions");
+var text = document.getElementById("text");
+var newDom = "";
+var animationDelay = 6;
 
-	for (let i = 0; i < text.innerText.length; i++) {
-		newDom += '<span class="char">' + (text.innerText[i] == ' ' ? '&nbsp;' : text.innerText[i]) + '</span>';
-	}
+menu.addClass("content-hidden").fadeOut();
 
-	text.innerHTML = newDom;
-	var length = text.children.length;
+for (let i = 0; i < text.innerText.length; i++) {
+  newDom += '<span class="char">' + (text.innerText[i] == " " ? "&nbsp;" : text.innerText[i]) + "</span>";
+}
 
-	for (let i = 0; i < length; i++) {
-		text.children[i].style['animation-delay'] = animationDelay * i + 'ms';
-	}
+text.innerHTML = newDom;
+var length = text.children.length;
 
-	var welcomeSection = $('.center'),
-		productsButton = welcomeSection.find('.products'),
-		loginButton = welcomeSection.find('.login');
+for (let i = 0; i < length; i++) {
+  text.children[i].style["animation-delay"] = animationDelay * i + "ms";
+}
 
-	setTimeout(function () {
-		welcomeSection.removeClass('content-hidden');
-	}, 500);
+var welcomeSection = $(".center"),
+  productsButton = welcomeSection.find(".products"),
+  loginButton = welcomeSection.find(".login");
 
-	productsButton.on('click', function () {
-		welcomeSection.addClass('content-hidden').fadeOut();
-	});
-	loginButton.on('click', function () {
-		welcomeSection.addClass('content-hidden').fadeOut();
-	});
+setTimeout(function () {
+  welcomeSection.removeClass("content-hidden");
+}, 500);
+
+productsButton.on("click", function () {
+  welcomeSection.addClass("content-hidden").fadeOut();
+});
+loginButton.on("click", function () {
+  welcomeSection.addClass("content-hidden").fadeOut();
+});
 </script>
 
-
 <script>
-	export default {
-		data: function () {
-			return {
 
-			}
+import LayoutComponent from "./layout.vue";
+import ProductComponent from "./product.vue";
+import WelcomeComponent from "./welcome.vue";
 
-		}
-	}
+export default {
+  data() {
+    return {
+      logged: null,
+      welcomePage: true,
+    };
+  },
+  methods: {
+    logout() {
+      axios
+        .post("/api/logout")
+        .then((response) => {
+          console.log("User has logged out");
+        })
+        .catch((error) => {
+          console.log("Invalid Logout");
+        });
+    },
+    myself() {
+      axios
+        .get("/api/users/me")
+        .then((response) => {
+          console.log("User currently logged:");
+          console.dir(response.data);
+        })
+        .catch((error) => {
+          console.log("Invalid Request");
+        });
+    },
+  },
+  mounted: function () {
+    axios
+      .get("/api/users/me")
+      .then((response) => {
+        console.log("User currently logged:");
+        console.dir(response.data);
+        this.logged = false;
+      })
+      .catch((error) => {
+        console.log("Invalid Request");
+        this.logged = true;
+      });
+  },
+};
 </script>
