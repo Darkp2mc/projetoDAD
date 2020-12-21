@@ -1,49 +1,54 @@
 <template>
-<div class="jumbotron">
-  <div class="table-responsive">
-    <router-link to="/cart">Cart</router-link> -
-    <router-link to="/login">Login</router-link>
-    <router-link to="/products">Logout</router-link>
-    <a v-if="logged" href="#" @click.prevent="myself">Myself</a>
-    <hr/>
-    <table class="table table-hover">
-      <thead>
-        <tr>
-          <th>Product</th>
-          <th>Name</th>
-          <th>Type</th>
-          <th>Description</th>
-          <th>Price</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr
-          v-for="product in products"
-          :key="product.id"
-          :class="{ active: editingProduct === product }"
-        >
-          <td>{{ product.name }}</td>
-          <td>{{ product.type }}</td>
-          <td>{{ product.description }}</td>
-          <td>{{ product.price }}€</td>
-          <td>
-            <a class="btn btn-sm btn-success" v-on:click.prevent="addProduct(product)"
-              >Adicionar</a
-            >
-            <a class="btn btn-sm btn-success" v-on:click.prevent="removeProduct(product)"
-              >Remover</a
-            >
-            <a class="btn btn-xs btn-primary" v-on:click.prevent="editProduct(product)"
-              >Edit</a
-            >
-            <a class="btn btn-xs btn-danger" v-on:click.prevent="deleteProduct(product)"
-              >Delete</a
-            >
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+  <div class="jumbotron">
+    <div class="table-responsive">
+      [ <router-link to="/cart">Cart</router-link> ]
+      <router-link v-if="this.logged != true" to="/login">Login</router-link>
+      <div v-if="this.logged == true">
+        <a href="#/products" v-on:click.prevent="logout">Logout</a> -
+        <router-link to="/myself">Myself</router-link>
+      </div>
+      <hr />
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Description</th>
+            <th>Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="product in products"
+            :key="product.id"
+            :class="{ active: editingProduct === product }"
+          >
+            <!-- <img :src="'../storage/app/public/fotos/'+product.photo_url"> -->
+            <td>{{ product.name }}</td>
+            <td>{{ product.type }}</td>
+            <td>{{ product.description }}</td>
+            <td>{{ product.price }}€</td>
+            <td>
+              <a class="btn btn-sm btn-success" v-on:click.prevent="addProduct(product)"
+                >Adicionar</a
+              >
+              <a
+                class="btn btn-sm btn-success"
+                v-on:click.prevent="removeProduct(product)"
+                >Remover</a
+              >
+              <a class="btn btn-xs btn-primary" v-on:click.prevent="editProduct(product)"
+                >Edit</a
+              >
+              <a class="btn btn-xs btn-danger" v-on:click.prevent="deleteProduct(product)"
+                >Delete</a
+              >
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -53,6 +58,7 @@ export default {
   data: function () {
     return {
       editingProduct: null,
+      logged: null,
     };
   },
   watch: {
@@ -75,6 +81,43 @@ export default {
     removeProduct: function (product) {
       this.$emit("remove-click", product);
     },
+    myself() {
+      axios
+        .get("/api/users/me")
+        .then((response) => {
+          console.log("User currently logged:");
+          this.logged = true;
+          console.dir(response.data);
+        })
+        .catch((error) => {
+          console.log("Invalid Request");
+        });
+    },
+    logout() {
+      axios
+        .post("/api/logout")
+        .then((response) => {
+          this.logged = false;
+          console.log("User has logged out");
+        })
+        .catch((error) => {
+          console.log("Invalid Logout");
+        });
+    },
+  },
+  mounted: async function () {
+      await axios
+        .get("/api/users/me")
+        .then((response) => {
+          console.log("User currently logged:");
+          console.dir(response.data);
+          this.logged = true;
+          this.currentUser = response.data;
+        })
+        .catch((error) => {
+          console.log("Invalid Request");
+        });
+      //console.log("this.logged = "+this.logged);
   },
 };
 </script>

@@ -82,7 +82,7 @@ export default {
     getUsers: function () {
       axios.get('api/users')
         .then(response => { this.users = response.data.data })
-    }
+    },
   },
   mounted () {
     this.getUsers()

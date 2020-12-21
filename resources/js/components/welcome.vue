@@ -17,6 +17,10 @@
     <p v-if="this.logged != false" id="text" class="welcome">
       Welcome back {{ this.currentUser.name }}!
     </p>
+    <div v-if="this.logged == false">
+      <p id="text">Don't have an account?</p>
+      <a id="text" class="register" href="#/register">Register</a>
+    </div>
     <a id="text" class="products" href="#/products">Products</a>
   </div>
 </template>
@@ -89,18 +93,6 @@ export default {
           console.log("Invalid Logout");
         });
     },
-    myself() {
-      axios
-        .get("/api/users/me")
-        .then((response) => {
-          console.log("User currently logged:");
-          this.logged = true;
-          console.dir(response.data);
-        })
-        .catch((error) => {
-          console.log("Invalid Request");
-        });
-    },
   },
   mounted: async function () {
     await axios
@@ -114,7 +106,7 @@ export default {
       .catch((error) => {
         console.log("Invalid Request");
       });
-      //console.log("this.logged = "+this.logged);
+    //console.log("this.logged = "+this.logged);
   },
 };
 </script>

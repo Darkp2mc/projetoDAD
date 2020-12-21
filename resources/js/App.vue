@@ -11,6 +11,7 @@ import ProductComponent from "./components/product";
 import WelcomeComponent from "./components/welcome";
 import UserComponent from "./components/user";
 import CartComponent from "./components/cart";
+import RegisterComponent from './components/register'
 
 export default {
   components: {
@@ -18,6 +19,7 @@ export default {
     user: UserComponent,
     product: ProductComponent,
     cart: CartComponent,
+    register: RegisterComponent,
   }
 };
 </script>

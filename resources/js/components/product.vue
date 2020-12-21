@@ -4,14 +4,27 @@
       <h1>{{ title }}</h1>
     </div>
 
-    <product-list :products="products" :selected-product="currentProduct" @edit-click="editProduct" @delete-click="deleteProduct"></product-list>
-
     <div class="alert alert-success" v-if="showSuccess">
-      <button type="button" class="close-btn" v-on:click="showSuccess = false">&times;</button>
+      <button type="button" class="close-btn" v-on:click="showSuccess = false">
+        &times;
+      </button>
       <strong>{{ successMessage }}</strong>
     </div>
 
-    <product-edit v-if="currentProduct" :product="currentProduct" @product-saved="saveProduct" @product-canceled="cancelEdit"></product-edit>
+    <product-edit
+      v-if="currentProduct"
+      :product="currentProduct"
+      @product-saved="saveProduct"
+      @product-canceled="cancelEdit"
+    ></product-edit>
+
+    <product-list
+      :products="products"
+      :selected-product="currentProduct"
+      @edit-click="editProduct"
+      @delete-click="deleteProduct"
+    ></product-list>
+    
   </div>
 </template>
 
@@ -36,7 +49,6 @@ export default {
     };
   },
   methods: {
-    
     editProduct: function (product) {
       this.currentProduct = product;
       this.showSuccess = false;
@@ -67,7 +79,7 @@ export default {
       axios.get("api/products").then((response) => {
         this.products = response.data.data;
       });
-    }
+    },
   },
   mounted() {
     this.getProducts();

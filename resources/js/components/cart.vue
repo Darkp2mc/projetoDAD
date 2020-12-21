@@ -5,31 +5,49 @@
     </h1>
     <router-link to="/products" active-class="active">Products</router-link> -
     <router-link to="/login">Login</router-link>
-    <a v-if="logged" href="#" @click.prevent="logout">Logout</a>
+    <a v-if="$root.logged" href="#" @click.prevent="logout">Logout</a>
     <a v-if="logged" href="#" @click.prevent="myself">Myself</a>
     <hr />
-    
   </div>
 </template>
 
 <style>
-    nav cart.router-link-exact-active {
-    text-align: center;
-    }
+nav cart.router-link-exact-active {
+  text-align: center;
+}
 </style>
 
 <script>
+import productDetails from "./product.vue";
+
 export default {
-    data: function () {
+  components: {
+    'productDetails': productDetails,
+  },
+  data: function () {
     return {
-      title: 'Shopping Cart',
+      title: "Shopping Cart",
       showSuccess: false,
       showFailure: false,
-      successMessage: '',
-      failMessage: '',
+      successMessage: "",
+      failMessage: "",
       currentUser: null,
-      users: [],
-    }
+      products: [],
+    };
+  },
+  methods: {
+    myself() {
+      axios
+        .get("/api/users/me")
+        .then((response) => {
+          console.log("User currently logged:");
+          this.logged = true;
+          console.dir(response.data);
+        })
+        .catch((error) => {
+          console.log("Invalid Request");
+        });
+    },
   },
 };
 </script>

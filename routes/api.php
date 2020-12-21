@@ -36,6 +36,8 @@ Route::middleware('auth:sanctum')->get('products',[Product::class, 'index']);
 Route::post('login',             [AuthController::class, 'login']);
 Route::post('logout',            [AuthController::class, 'logout']);
 
+Route::post('register',            [AuthController::class, 'register']);
+
 Route::get('users',                 [UserController::class, 'index']);
 Route::get('users/emailavailable',  [UserController::class, 'emailAvailable']);
 Route::get('users/{user}',          [UserController::class, 'show']);

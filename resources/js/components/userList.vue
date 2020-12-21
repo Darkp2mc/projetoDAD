@@ -21,6 +21,7 @@
         <td>{{ user.name }}</td>
         <td>{{ user.email }}</td>
         <td>{{ user.type }}</td>
+        <!-- <img :src="'../storage/app/public/fotos/'+user.photo_url"> -->
         <td>
           <a
             class="btn btn-xs btn-primary"
