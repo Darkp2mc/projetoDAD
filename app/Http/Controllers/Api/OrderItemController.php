@@ -49,12 +49,13 @@ class OrderItemController extends Controller
     //     $user->save();
     //     return response()->json(new UserResource($user), 201);
     // }
-
+/*
     public function update(UpdateProductRequest $request, Product $product)
     {
         $product->update($request->validated());
         return new ProductResource($product);
     }
+    */
     /* SEM UpdateUserRequest */
     // public function update(Request $request, $id)
     // {

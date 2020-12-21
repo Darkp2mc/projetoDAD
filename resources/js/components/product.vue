@@ -46,6 +46,8 @@ export default {
       currentProduct: null,
       welcomePage: false,
       products: [],
+      orders: [],
+      currentOrders: [],
     };
   },
   methods: {
@@ -54,9 +56,7 @@ export default {
       this.showSuccess = false;
     },
     deleteProduct: function (product) {
-      axios.delete("api/order_items/" + product.id).then((response) => {
-        this.getProducts();
-      });
+      this.fetchOrder(); 
       axios.delete("api/products/" + product.id).then((response) => {
         this.showSuccess = true;
         this.successMessage = "Product Deleted";
@@ -83,6 +83,18 @@ export default {
         this.products = response.data.data;
       });
     },
+    getOrders: function(){
+      axios.get("api/order_items").then((response) => {
+        this.orders = response.data.data;
+        //console.log(this.orders);
+      });
+    },
+    fetchOrder: function(){
+      this.getOrders();
+      this.orders.forEach(element => {
+        console.log("Teste"+element);
+      });      
+    }
   },
   mounted() {
     this.getProducts();
