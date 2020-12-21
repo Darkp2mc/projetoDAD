@@ -24,7 +24,7 @@
       @edit-click="editProduct"
       @delete-click="deleteProduct"
     ></product-list>
-    
+
   </div>
 </template>
 
@@ -54,6 +54,9 @@ export default {
       this.showSuccess = false;
     },
     deleteProduct: function (product) {
+      axios.delete("api/order_items/" + product.id).then((response) => {
+        this.getProducts();
+      });
       axios.delete("api/products/" + product.id).then((response) => {
         this.showSuccess = true;
         this.successMessage = "Product Deleted";

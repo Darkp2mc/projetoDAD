@@ -3,11 +3,14 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\UserController as User;
+use App\Http\Controllers\Api\UserController as User;
 use App\Http\Controllers\Api\UserController;
 
-use App\Http\Controllers\ProductController as Product;
+use App\Http\Controllers\Api\ProductController as Product;
 use App\Http\Controllers\Api\ProductController;
+
+use App\Http\Controllers\OrderItemController as OrderItem;
+use App\Http\Controllers\Api\OrderItemController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,10 +31,15 @@ Route::middleware('auth:api')->get('/product', function (Request $request) {
     return $request->product();
 });
 
+Route::middleware('auth:api')->get('/orderitem', function (Request $request) {
+    return $request->order_items();
+});
+
 Route::middleware('auth:sanctum')->get('users',[User::class, 'index']);
 Route::middleware('auth:sanctum')->get('users/me', [UserController::class, 'me']);
 
 Route::middleware('auth:sanctum')->get('products',[Product::class, 'index']);
+Route::middleware('auth:sanctum')->get('order_items',[OrderItem::class, 'index']);
 
 Route::post('login',             [AuthController::class, 'login']);
 Route::post('logout',            [AuthController::class, 'logout']);
@@ -52,3 +60,10 @@ Route::get('products/{product}',          [ProductController::class, 'show']);
 Route::post('products',                   [ProductController::class, 'store']);
 Route::put('products/{product}',          [ProductController::class, 'update']);
 Route::delete('products/{product}',       [ProductController::class, 'destroy']);
+
+Route::get('order_items',                    [OrderItemController::class, 'index']);
+Route::get('order_items/{orderitem}',          [OrderItemController::class, 'show']);
+
+Route::post('order_items',                   [OrderItemController::class, 'store']);
+Route::put('order_items/{orderitem}',          [OrderItemController::class, 'update']);
+Route::delete('order_items/{orderitem}',       [OrderItemController::class, 'destroy']);

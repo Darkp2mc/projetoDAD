@@ -55,7 +55,6 @@ export default {
         axios
           .post("/api/login", this.credentials)
           .then((response) => {
-            console.log(this.credentials);
             console.log("User has logged in");
             this.$router.push("/products");
             console.dir(response.data);

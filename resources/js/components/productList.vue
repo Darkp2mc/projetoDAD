@@ -38,10 +38,16 @@
                 v-on:click.prevent="removeProduct(product)"
                 >Remover</a
               >
-              <a class="btn btn-xs btn-primary" v-on:click.prevent="editProduct(product)"
+              <a
+                class="btn btn-xs btn-primary"
+                v-if="checkManager()"
+                v-on:click.prevent="editProduct(product)"
                 >Edit</a
               >
-              <a class="btn btn-xs btn-danger" v-on:click.prevent="deleteProduct(product)"
+              <a
+                class="btn btn-xs btn-danger"
+                v-if="checkManager()"
+                v-on:click.prevent="deleteProduct(product)"
                 >Delete</a
               >
             </td>
@@ -59,6 +65,7 @@ export default {
     return {
       editingProduct: null,
       logged: null,
+      currentUser: null,
     };
   },
   watch: {
@@ -86,11 +93,13 @@ export default {
         .get("/api/users/me")
         .then((response) => {
           console.log("User currently logged:");
+          this.currentUser = response.data;
           this.logged = true;
           console.dir(response.data);
         })
         .catch((error) => {
           console.log("Invalid Request");
+          return false;
         });
     },
     logout() {
@@ -104,20 +113,35 @@ export default {
           console.log("Invalid Logout");
         });
     },
+    checkValidUser() {
+      if (this.currentUser == null) {
+        return false;
+      }
+      return true;
+    },
+    checkManager() {
+      if (this.checkValidUser()) {
+        if (this.currentUser.type == "EM") {
+          return true;
+        }
+      }
+      return false;
+    },
   },
   mounted: async function () {
-      await axios
-        .get("/api/users/me")
-        .then((response) => {
-          console.log("User currently logged:");
-          console.dir(response.data);
-          this.logged = true;
-          this.currentUser = response.data;
-        })
-        .catch((error) => {
-          console.log("Invalid Request");
-        });
-      //console.log("this.logged = "+this.logged);
+    await axios
+      .get("/api/users/me")
+      .then((response) => {
+        console.log("User currently logged:");
+        console.dir(response.data);
+        this.logged = true;
+        this.currentUser = response.data;
+      })
+      .catch((error) => {
+        this.currentUser = null;
+        console.log("Invalid Request");
+      });
+    //console.log("this.logged = "+this.logged);
   },
 };
 </script>
