@@ -24,7 +24,7 @@
             :key="product.id"
             :class="{ active: editingProduct === product }"
           >
-            <!-- <img :src="'../storage/app/public/fotos/'+product.photo_url"> -->
+            <td style="width: 10%"><img style="width: 100%; " :src="'storage/products/'+product.photo_url"></td>
             <td>{{ product.name }}</td>
             <td>{{ product.type }}</td>
             <td>{{ product.description }}</td>

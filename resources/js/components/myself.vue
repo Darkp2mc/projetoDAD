@@ -36,8 +36,8 @@ export default {
     };
   },
   methods: {
-    getUsers: function () {
-      axios
+    getUsers: async function () {
+      await axios
         .get("/api/users/me")
         .then((response) => {
           this.currentUser = response.data;
@@ -47,8 +47,8 @@ export default {
           console.log("Invalid Request");
         });
     },
-    logout() {
-      axios
+    logout: async function(){
+      await axios
         .post("/api/logout")
         .then((response) => {
           this.currentUser = "";

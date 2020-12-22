@@ -74,4 +74,11 @@ body{
     }
 }
 
+td.tableImage{
+    width: 10%;
+}
+img.tableImage{
+    width: 100%;
+}
+
 

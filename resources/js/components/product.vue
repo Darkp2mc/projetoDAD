@@ -55,9 +55,9 @@ export default {
       this.currentProduct = product;
       this.showSuccess = false;
     },
-    deleteProduct: function (product) {
+    deleteProduct: async function (product) {
       this.fetchOrder(); 
-      axios.delete("api/products/" + product.id).then((response) => {
+      await axios.delete("api/products/" + product.id).then((response) => {
         this.showSuccess = true;
         this.successMessage = "Product Deleted";
         this.getProducts();
@@ -83,8 +83,8 @@ export default {
         this.products = response.data.data;
       });
     },
-    getOrders: function(){
-      axios.get("api/order_items").then((response) => {
+    getOrders: async function(){
+      await axios.get("api/order_items").then((response) => {
         this.orders = response.data.data;
         //console.log(this.orders);
       });

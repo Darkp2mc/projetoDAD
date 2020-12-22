@@ -18,3 +18,4 @@ node_modules/
 database/
 config/
 bootstrap/
+public/
