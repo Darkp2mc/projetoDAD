@@ -8,10 +8,18 @@
         <router-link to="/myself">Myself</router-link>
       </div>
       <hr />
-      <form class="searchBarProducts" action="/action_page.php" style="margin:auto;max-width:300px">
-        <input type="text" v-model="productNameSearch" placeholder="Search name.." name="search2">
-        <button type="submit" v-on:click.prevent="search"><i class="fa fa-search"></i></button>
-      </form>
+      <div class="form-group">
+        <label for="department_id">Type:</label>
+        <select class="form-control" v-model="selectedType" >
+          <option v-for="type in types" :value="type.name">{{ type.name }}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <form class="searchBarProducts" action="/action_page.php" style="margin:auto;max-width:300px">
+          <input type="text" v-model="productNameSearch" placeholder="Search name.." name="search2">
+          <button type="submit" v-on:click.prevent="search"><i class="fa fa-search"></i></button>
+        </form>
+      </div>
       <table class="table table-hover">
         <thead>
           <tr>
@@ -71,6 +79,11 @@ export default {
       logged: null,
       currentUser: null,
       productNameSearch: null,
+      selectedType: null,
+      types: [{"id": 1, "name": "hot dish"},
+              {"id": 2, "name": "cold dish"},
+              {"id": 3, "name": "drink"},
+              {"id": 4, "name": "dessert"}],
       productsList: this.productsList = [...this.$store.state.productList],
     };
   },
@@ -135,15 +148,23 @@ export default {
     },
     search: function(){
       this.productsList = [...this.products];
-      if (this.productsList.length == 0) {
-        return;
-      }
-      for (var i = this.productsList.length - 1; i >= 0; i--) {
-        if (!this.productsList[i].name.includes(this.productNameSearch)) {
-          this.productsList.splice(i,1);
+      this.filterType();
+      if (this.productNameSearch != null){
+        for (var i = this.productsList.length - 1; i >= 0; i--) {
+          if (!this.productsList[i].name.toLowerCase().includes(this.productNameSearch.toLowerCase())) {
+            this.productsList.splice(i,1);
+          }
         }
       }
       this.$store.commit('setProductList',this.productsList);
+    },
+    filterType: function(){
+      if (this.selectedType != null)
+        for (var i = this.productsList.length - 1; i >= 0; i--) {
+          if (this.productsList[i].type !== this.selectedType) {
+            this.productsList.splice(i,1);
+          }
+        }
     }
   },
   mounted: async function () {
@@ -159,8 +180,6 @@ export default {
         this.currentUser = null;
         console.log("Invalid Request");
       });
-
-      this.productsList = this.products;
     //console.log("this.logged = "+this.logged);
   }
 };
