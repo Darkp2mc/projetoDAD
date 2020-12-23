@@ -8,6 +8,10 @@
         <router-link to="/myself">Myself</router-link>
       </div>
       <hr />
+      <form class="searchBarProducts" action="/action_page.php" style="margin:auto;max-width:300px">
+        <input type="text" v-model="productNameSearch" placeholder="Search name.." name="search2">
+        <button type="submit" v-on:click.prevent="search"><i class="fa fa-search"></i></button>
+      </form>
       <table class="table table-hover">
         <thead>
           <tr>
@@ -20,7 +24,7 @@
         </thead>
         <tbody>
           <tr
-            v-for="product in products"
+            v-for="product in $store.state.productList"
             :key="product.id"
             :class="{ active: editingProduct === product }"
           >
@@ -66,6 +70,8 @@ export default {
       editingProduct: null,
       logged: null,
       currentUser: null,
+      productNameSearch: null,
+      productsList: this.productsList = [...this.$store.state.productList],
     };
   },
   watch: {
@@ -127,6 +133,18 @@ export default {
       }
       return false;
     },
+    search: function(){
+      this.productsList = [...this.products];
+      if (this.productsList.length == 0) {
+        return;
+      }
+      for (var i = this.productsList.length - 1; i >= 0; i--) {
+        if (!this.productsList[i].name.includes(this.productNameSearch)) {
+          this.productsList.splice(i,1);
+        }
+      }
+      this.$store.commit('setProductList',this.productsList);
+    }
   },
   mounted: async function () {
     await axios
@@ -141,7 +159,9 @@ export default {
         this.currentUser = null;
         console.log("Invalid Request");
       });
+
+      this.productsList = this.products;
     //console.log("this.logged = "+this.logged);
-  },
+  }
 };
 </script>

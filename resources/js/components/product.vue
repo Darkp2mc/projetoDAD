@@ -81,7 +81,9 @@ export default {
     getProducts: function () {
       axios.get("api/products").then((response) => {
         this.products = response.data.data;
-      });
+      }).then((response) => {
+        this.$store.commit('setProductList',this.products);
+      })
     },
     getOrders: async function(){
       await axios.get("api/order_items").then((response) => {

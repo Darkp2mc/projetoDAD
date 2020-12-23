@@ -5,9 +5,7 @@ window.Vue = require('vue')
 import App from './App.vue'
 import VueRouter from 'vue-router'
 import Vue from 'vue';
-import Vuex from 'vuex';
 
-Vue.use(Vuex)
 Vue.use(VueRouter)
 
 import LayoutComponent from './components/layout'
@@ -18,6 +16,8 @@ import CartComponent from './components/cart.vue'
 import UserComponent from './components/user.vue'
 import MyselfComponent from './components/myself.vue'
 import RegisterComponent from './components/register'
+
+import store from "./stores/global-store"
 
 const routes = [
 	{ path: '/', redirect: '/welcome' },
@@ -33,12 +33,6 @@ const routes = [
 
 const router = new VueRouter({
 	routes: routes,
-})
-
-const store = new Vuex.Store({
-	state:{
-		logged: null,
-	}
 })
 
 new Vue({
