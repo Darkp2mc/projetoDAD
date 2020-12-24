@@ -24,24 +24,41 @@ export default new Vuex.Store({
 			//this way is more efficient because when somebody add products usually is the same one consecutively
 			if (state.shoppingCart == null) {
 				state.shoppingCart = [];
-				state.shoppingCart.push({"currentUserId": data.currentUserId, "orderItem":[{"product": data.product, "quantity": 1}]})
+				state.shoppingCart.push({"currentUserId": data.currentUserId, "orderItem":[{"product": data.product, "quantity": 1, "subTotal": parseFloat(data.product.price)}], "total": parseFloat(data.product.price)})
 			}
 			else{
 				for (var i = state.shoppingCart.length - 1; i >= 0; i--) {
 					if (state.shoppingCart[i].currentUserId == data.currentUserId) {
 						if (state.shoppingCart[i].orderItem.length - 1 == -1) {
-							state.shoppingCart[i].orderItem.push({"product": data.product, "quantity": 0})
+							state.shoppingCart[i].orderItem.push({"product": data.product, "quantity": 1, "subTotal": parseFloat(data.product.price)});
+							state.shoppingCart[i].total += parseFloat(state.shoppingCart[i].orderItem[j].product.price);
+							break;
 						}
 						for (var j = state.shoppingCart[i].orderItem.length - 1; j>= 0; j--) {
 							if(state.shoppingCart[i].orderItem[j].product.id == data.product.id){
 								state.shoppingCart[i].orderItem[j].quantity++;
+								state.shoppingCart[i].orderItem[j].subTotal += parseFloat(state.shoppingCart[i].orderItem[j].product.price);
+								state.shoppingCart[i].total += parseFloat(state.shoppingCart[i].orderItem[j].product.price);
 								break;
 							}
+							else if (j == 0) {
+								state.shoppingCart[i].orderItem.push({"product": data.product, "quantity": 1, "subTotal": parseFloat(data.product.price)});
+								state.shoppingCart[i].total += parseFloat(state.shoppingCart[i].orderItem[j].product.price);
+							}
 						}
+						break;
+					}
+					else if (i == 0) {
+						state.shoppingCart.push({"currentUserId": data.currentUserId, "orderItem":[{"product": data.product, "quantity": 1, "subTotal": parseFloat(data.product.price)}], "total": parseFloat(data.product.price)})
 					}
 				}
 			}
 			console.log(state.shoppingCart)
+			localStorage.setItem('shoppingCart',JSON.stringify(state.shoppingCart));
+		},
+		cleanCart(){
+			state.shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'));
+
 			localStorage.setItem('shoppingCart',JSON.stringify(state.shoppingCart));
 		}
 	}
