@@ -1,23 +1,49 @@
 <template>
   <div class="jumbotron">
     <div class="table-responsive">
-      [ <router-link to="/cart">Cart</router-link> ]
       <router-link v-if="this.logged != true" to="/login">Login</router-link>
       <div v-if="this.logged == true">
+        <h3
+          style="
+            position: absolute;
+            margin-top: 30px;
+            float: right;
+            right: -18px;
+            top: 0px;
+          "
+        >
+          <img
+            style="width: 15%; border-radius: 50%"
+            :src="'storage/fotos/' + this.currentUser.photo_url"
+          />
+          {{ this.currentUser.name }}
+        </h3>
         <a href="#/products" v-on:click.prevent="logout">Logout</a> -
         <router-link to="/myself">Myself</router-link>
       </div>
+      [ <router-link to="/cart">Cart</router-link> ]
       <hr />
       <div class="form-group">
         <label for="department_id">Type:</label>
-        <select class="form-control" v-model="selectedType" >
+        <select class="form-control" v-model="selectedType">
           <option v-for="type in types" :value="type.name">{{ type.name }}</option>
         </select>
       </div>
       <div class="form-group">
-        <form class="searchBarProducts" action="/action_page.php" style="margin:auto;max-width:300px">
-          <input type="text" v-model="productNameSearch" placeholder="Search name.." name="search2">
-          <button type="submit" v-on:click.prevent="search"><i class="fa fa-search"></i></button>
+        <form
+          class="searchBarProducts"
+          action="/action_page.php"
+          style="margin: auto; max-width: 300px"
+        >
+          <input
+            type="text"
+            v-model="productNameSearch"
+            placeholder="Search name.."
+            name="search2"
+          />
+          <button type="submit" v-on:click.prevent="search">
+            <i class="fa fa-search"></i>
+          </button>
         </form>
       </div>
       <table class="table table-hover">
@@ -36,18 +62,20 @@
             :key="product.id"
             :class="{ active: editingProduct === product }"
           >
-            <td style="width: 10%"><img style="width: 100%; " :src="'storage/products/'+product.photo_url"></td>
+            <td style="width: 10%">
+              <img style="width: 100%" :src="'storage/products/' + product.photo_url" />
+            </td>
             <td>{{ product.name }}</td>
             <td>{{ product.type }}</td>
             <td>{{ product.description }}</td>
             <td>{{ product.price }}€</td>
             <td>
-              <a class="btn btn-sm btn-success" v-on:click.prevent="addProduct(product)"
+              <a class="btn btn-sm btn-success" v-on:click.prevent="addToCart(product)"
                 >Adicionar</a
               >
               <a
                 class="btn btn-sm btn-success"
-                v-on:click.prevent="removeProduct(product)"
+                v-on:click.prevent="removeFromCart(product)"
                 >Remover</a
               >
               <a
@@ -80,11 +108,13 @@ export default {
       currentUser: null,
       productNameSearch: null,
       selectedType: null,
-      types: [{"id": 1, "name": "hot dish"},
-              {"id": 2, "name": "cold dish"},
-              {"id": 3, "name": "drink"},
-              {"id": 4, "name": "dessert"}],
-      productsList: this.productsList = [...this.$store.state.productList],
+      types: [
+        { id: 1, name: "hot dish" },
+        { id: 2, name: "cold dish" },
+        { id: 3, name: "drink" },
+        { id: 4, name: "dessert" },
+      ],
+      productsList: (this.productsList = [...this.$store.state.productList]),
     };
   },
   watch: {
@@ -101,13 +131,10 @@ export default {
       this.editingProduct = null;
       this.$emit("delete-click", product);
     },
-    addProduct: function (product) {
-      //this.$emit("add-click", product);
-      if (this.currentUser != null) {
-        this.$store.commit('setShoppingCart',{"product":product,"currentUserId":this.currentUser.id});
-      }
+    addToCart: function (product) {
+      this.$emit("add-click", product);
     },
-    removeProduct: function (product) {
+    removeFromCart: function (product) {
       this.$emit("remove-click", product);
     },
     myself() {
@@ -149,26 +176,42 @@ export default {
       }
       return false;
     },
-    search: function(){
+    search: function () {
       this.productsList = [...this.products];
       this.filterType();
-      if (this.productNameSearch != null){
+      if (this.productNameSearch != null) {
         for (var i = this.productsList.length - 1; i >= 0; i--) {
-          if (!this.productsList[i].name.toLowerCase().includes(this.productNameSearch.toLowerCase())) {
-            this.productsList.splice(i,1);
+          if (
+            !this.productsList[i].name
+              .toLowerCase()
+              .includes(this.productNameSearch.toLowerCase())
+          ) {
+            this.productsList.splice(i, 1);
           }
         }
       }
-      this.$store.commit('setProductList',this.productsList);
+      this.$store.commit("setProductList", this.productsList);
     },
-    filterType: function(){
+    filterType: function () {
       if (this.selectedType != null)
         for (var i = this.productsList.length - 1; i >= 0; i--) {
           if (this.productsList[i].type !== this.selectedType) {
-            this.productsList.splice(i,1);
+            this.productsList.splice(i, 1);
           }
         }
-    }
+    },
+    showList() {
+      var modal = document.getElementById("shoppingList");
+      var btn = document.getElementById("show");
+      btn.onclick = function() {
+        modal.style.display = "block";
+      };
+      window.onclick = function(event) {
+        if (event.target == modal) {
+          modal.style.display = "none";
+        }
+      };
+    },
   },
   mounted: async function () {
     await axios
@@ -184,6 +227,6 @@ export default {
         console.log("Invalid Request");
       });
     //console.log("this.logged = "+this.logged);
-  }
+  },
 };
 </script>
