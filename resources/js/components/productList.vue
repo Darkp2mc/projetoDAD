@@ -102,7 +102,8 @@ export default {
       this.$emit("delete-click", product);
     },
     addProduct: function (product) {
-      this.$emit("add-click", product);
+      //this.$emit("add-click", product);
+      this.$store.commit('setShoppingCart',product);
     },
     removeProduct: function (product) {
       this.$emit("remove-click", product);
