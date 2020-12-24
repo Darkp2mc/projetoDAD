@@ -103,7 +103,9 @@ export default {
     },
     addProduct: function (product) {
       //this.$emit("add-click", product);
-      this.$store.commit('setShoppingCart',product);
+      if (this.currentUser != null) {
+        this.$store.commit('setShoppingCart',{"product":product,"currentUserId":this.currentUser.id});
+      }
     },
     removeProduct: function (product) {
       this.$emit("remove-click", product);
