@@ -55,15 +55,28 @@ export default {
         axios
           .post("/api/login", this.credentials)
           .then((response) => {
-            console.log("User has logged in");
-            this.$router.push("/products");
-            console.dir(response.data);
+            if (response.data.blocked == 1) {
+              alert("Your account is blocked");
+              this.failedMessage = "Your account is blocked";
+              this.logout()
+            }
+            else{
+              console.log("User has logged in");
+              this.$router.push("/products");
+            }
           })
           .catch((error) => {
             alert("Invalid Authentication");
             this.failedMessage = "Invalid Authentication";
           });
       });
+    },
+    logout() {
+      axios
+        .post("/api/logout")
+        .catch((error) => {
+          console.log("Invalid Logout");
+        });
     },
   },
 };

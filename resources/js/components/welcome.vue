@@ -15,7 +15,7 @@
     >
     <p v-if="this.logged == false" id="text" class="welcome">Welcome!</p>
     <p v-if="this.logged != false" id="text" class="welcome">
-      Welcome back {{ this.currentUser.name }}!
+      Welcome back {{ $store.state.currentUser.name }}!
     </p>
     <div v-if="this.logged == false">
       <p id="text">Don't have an account?</p>
@@ -72,7 +72,6 @@ export default {
   data() {
     return {
       logged: false,
-      currentUser: "",
       welcomePage: true,
     };
   },
@@ -80,12 +79,11 @@ export default {
     reloadPage() {
       window.location.reload();
     },
-    logout() {
-      axios
+    logout: async function() {
+      await axios
         .post("/api/logout")
         .then((response) => {
-          alert("You logged out");
-          this.currentUser = "";
+          this.$store.commit('setCurrentUser',"");
           this.logged = false;
           console.log("User has logged out");
         })
@@ -95,13 +93,14 @@ export default {
     },
   },
   mounted: async function () {
+    this.logout();
     await axios
       .get("/api/users/me")
       .then((response) => {
         console.log("User currently logged:");
         console.dir(response.data);
         this.logged = true;
-        this.currentUser = response.data;
+        this.$store.commit('setCurrentUser',response.data);
       })
       .catch((error) => {
         console.log("Invalid Request");

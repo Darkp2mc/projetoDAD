@@ -40,8 +40,8 @@ export default {
       await axios
         .get("/api/users/me")
         .then((response) => {
-          this.currentUser = response.data;
-          this.user = this.currentUser;
+          this.$store.commit('setCurrentUser',response.data);
+          this.user = this.$store.state.currentUser;
         })
         .catch((error) => {
           console.log("Invalid Request");
@@ -51,7 +51,7 @@ export default {
       await axios
         .post("/api/logout")
         .then((response) => {
-          this.currentUser = "";
+          this.$store.commit('setCurrentUser',"");
           this.user = null;
           this.logged = false;
           console.log("User has logged out");

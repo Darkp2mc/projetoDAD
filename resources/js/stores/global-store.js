@@ -5,6 +5,7 @@ export default new Vuex.Store({
  	state: {
  		logged: null,
  		productList: [],
+ 		currentUser: null,
 	},
 	mutations: {
 		clearProductList (state) {
@@ -12,6 +13,9 @@ export default new Vuex.Store({
 		},
 		setProductList (state, productList) {
 			state.productList = productList
+		},
+		setCurrentUser (state, currentUser) {
+			state.currentUser = currentUser
 		}
 	}
 })
