@@ -132,7 +132,10 @@ export default {
       this.$emit("delete-click", product);
     },
     addToCart: function (product) {
-      this.$emit("add-click", product);
+      //this.$emit("add-click", product);
+      if (this.currentUser != null) {
+        this.$store.commit('setShoppingCart',{"product":product,"currentUserId":this.currentUser.id});
+      }
     },
     removeFromCart: function (product) {
       this.$emit("remove-click", product);
