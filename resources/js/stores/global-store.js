@@ -8,7 +8,14 @@ export default new Vuex.Store({
  		currentUser: null,
  		shoppingCart: []
 	},
+	getters: {
+		getProductList: state => state.productList,
+		getCurrentUser: state => state.currentUserId,
+  	},
 	mutations: {
+		getShoppingCart (state) {
+    		state.shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'));
+    	},
 		clearProductList (state) {
 			state.productList = []
 		},
@@ -17,6 +24,9 @@ export default new Vuex.Store({
 		},
 		setCurrentUser (state, currentUser) {
 			state.currentUser = currentUser
+		},
+		setDepartments (state, products) {
+		 	state.products = products
 		},
 		setShoppingCart(state, data){
 
@@ -31,19 +41,16 @@ export default new Vuex.Store({
 					if (state.shoppingCart[i].currentUserId == data.currentUserId) {
 						if (state.shoppingCart[i].orderItem.length - 1 == -1) {
 							state.shoppingCart[i].orderItem.push({"product": data.product, "quantity": 1, "subTotal": parseFloat(data.product.price)});
-							state.shoppingCart[i].total += parseFloat(state.shoppingCart[i].orderItem[j].product.price);
 							break;
 						}
 						for (var j = state.shoppingCart[i].orderItem.length - 1; j>= 0; j--) {
 							if(state.shoppingCart[i].orderItem[j].product.id == data.product.id){
 								state.shoppingCart[i].orderItem[j].quantity++;
 								state.shoppingCart[i].orderItem[j].subTotal += parseFloat(state.shoppingCart[i].orderItem[j].product.price);
-								state.shoppingCart[i].total += parseFloat(state.shoppingCart[i].orderItem[j].product.price);
 								break;
 							}
 							else if (j == 0) {
 								state.shoppingCart[i].orderItem.push({"product": data.product, "quantity": 1, "subTotal": parseFloat(data.product.price)});
-								state.shoppingCart[i].total += parseFloat(state.shoppingCart[i].orderItem[j].product.price);
 							}
 						}
 						break;
@@ -53,12 +60,23 @@ export default new Vuex.Store({
 					}
 				}
 			}
-			console.log(state.shoppingCart)
+			localStorage.setItem('shoppingCart',JSON.stringify(state.shoppingCart));
+
+		},
+		cleanCart(state, currentUserId){
+			state.shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'));
+			console.log("Cleaning")
 			localStorage.setItem('shoppingCart',JSON.stringify(state.shoppingCart));
 		},
-		cleanCart(){
+		changeItemQuantity(state, data){
 			state.shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'));
-
+			console.log(state.shoppingCart)
+			for (var i = state.shoppingCart.length - 1; i >= 0; i--) {
+				if (state.shoppingCart[i].currentUserId = data.currentUserId) {
+					state.shoppingCart[i].orderItem[data.id] = data.item;
+					break;
+				}
+			}
 			localStorage.setItem('shoppingCart',JSON.stringify(state.shoppingCart));
 		}
 	}
