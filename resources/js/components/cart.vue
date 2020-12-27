@@ -4,25 +4,25 @@
       {{ title }}
     </h1>
     <router-link to="/products" active-class="active">Products</router-link> -
-    <router-link to="/login">Login</router-link>
-    <a v-if="$root.logged" href="#" @click.prevent="logout">Logout</a>
-    <a v-if="logged" href="#" @click.prevent="myself">Myself</a>
-    <hr />
-
-    <table class="table table-hover">
+    <router-link v-if="this.logged != true" to="/login">Login</router-link>
+    <div v-if="this.logged == true">
+      <a href="#/products" v-on:click.prevent="logout">Logout</a> -
+      <router-link to="/myself">Myself</router-link>
+    </div>
+    <table class="table table-hover" >
       <thead>
         <tr>
           <th>Product</th>
-          <th>Quantity</th>
+          <th style="text-align: center; width:20%;">Quantity</th>
           <th>Price per unit</th>
           <th>Sub-total</th>
+          <th></th>
         </tr>
         <tr
             v-for="(item,index) in cart" :key="item.id"
           >
           <td>{{item.product.name}}</td>
-          <td>
-            <div style="text-align: center; width:50%;">
+          <td style="text-align: center; width:20%;">
             <div>
               <a
                 class="btn btn-sm btn-success"
@@ -38,15 +38,14 @@
                 >v
               </a>
             </div>
-          </div>
           </td>
           <td>{{item.product.price}}€</td>
           <td>{{Math.round((item.subTotal + Number.EPSILON) * 100) / 100}}€</td>
           <td>
             <a
               class="btn btn-sm btn-success"
-              v-on:click.prevent="removeFromCart(item)"
-              >Remover</a
+              v-on:click.prevent="removeFromCart(item,index)"
+              >Remove</a
             >
           </td>
         </tr>
@@ -55,7 +54,11 @@
           <th></th>
           <th></th>
           <th>{{Math.round((total + Number.EPSILON) * 100) / 100}}€</th>
-          <th></th>
+          <th><a
+              class="btn btn-sm btn-success"
+              v-on:click.prevent="removeAll()"
+              >Remove All</a
+            ></th>
         </tr>
       </thead>
     </table>
@@ -82,7 +85,7 @@ export default {
       logged: null,
       failMessage: "",
       currentUser: null,
-      cart: null,
+      cart: [],
       item: [],
       total: 0,
     };
@@ -138,13 +141,22 @@ export default {
       
     },
     removeItem: function(item,id){
-      this.cart[id].quantity--;
-      this.cart[id].subTotal -= parseFloat(this.cart[id].product.price)
-      this.total -= parseFloat(this.cart[id].product.price);
-      this.$store.commit("changeItemQuantity",{"item":this.cart[id],"id":id, "currentUserId": this.currentUser.id});
+      if (this.cart[id].quantity > 1) {
+        this.cart[id].quantity--;
+        this.cart[id].subTotal -= parseFloat(this.cart[id].product.price)
+        this.total -= parseFloat(this.cart[id].product.price);
+        this.$store.commit("changeItemQuantity",{"item":this.cart[id],"id":id, "currentUserId": this.currentUser.id});
+      }
     },
-    removeFromCart: function(item){
-
+    removeFromCart: function(item,id){
+      this.total -= this.cart[id].subTotal;
+      this.cart.splice(id,1);
+      this.$store.commit("removeItemFromCart",{"item":this.cart[id],"id":id, "currentUserId": this.currentUser.id});
+    },
+    removeAll: function(){
+      this.total = 0;
+      this.cart = [];
+      this.$store.commit("removeAllItemsFromCart", this.currentUser.id);
     }
   },
 };
