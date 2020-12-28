@@ -244,6 +244,7 @@ export default {
         this.logged = true;
         this.$store.commit('setCurrentUser',response.data);
         this.$store.state.logged = true
+        this.currentUser = response.data;
       })
       .catch((error) => {
         console.log(error);

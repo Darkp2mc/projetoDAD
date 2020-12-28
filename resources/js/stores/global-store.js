@@ -2,7 +2,6 @@ import Axios from "axios"
 import Vue from "vue"
 import Vuex from "vuex"
 import createPersistedState from 'vuex-persistedstate'
-import * as Cookies from 'js-cookie'
 
 Vue.use(Vuex)
 export default new Vuex.Store({
@@ -20,8 +19,10 @@ export default new Vuex.Store({
 	mutations: {
 		getShoppingCart (state) {
     		state.shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'));
-    		if(state.shoppingCart.length == 0)
+
+    		if(state.shoppingCart == null){
     			state.shoppingCart = [];
+    		}
     },
 		clearProductList (state) {
 			state.productList = []
@@ -35,7 +36,7 @@ export default new Vuex.Store({
 		setShoppingCart(state, data){
 			state.shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'));
 			//this way is more efficient because when somebody add products usually is the same one consecutively
-			if (state.shoppingCart.length == 0) {
+			if (state.shoppingCart == null) {
 				state.shoppingCart = [];
 				state.shoppingCart.push({ "currentUserId": data.currentUserId, "orderItem": [{ "product": data.product, "quantity": 1, "subTotal": parseFloat(data.product.price) }], "total": parseFloat(data.product.price) })
 			}
@@ -63,7 +64,7 @@ export default new Vuex.Store({
 					}
 				}
 			}
-      localStorage.setItem('shoppingCart',JSON.stringify(state.shoppingCart));
+      		localStorage.setItem('shoppingCart',JSON.stringify(state.shoppingCart));
 
 		},
 
@@ -91,7 +92,7 @@ export default new Vuex.Store({
 		},
 		removeAllItemsFromCart(state, currentUserId){
 			state.shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'));
-    		if(state.shoppingCart.length == 0)
+    		if(state.shoppingCart == null)
     			state.shoppingCart = [];
 
 			for (var i = state.shoppingCart.length - 1; i >= 0; i--) {

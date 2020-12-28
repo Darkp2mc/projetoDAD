@@ -1,4 +1,4 @@
-<template>
+<!--<template>
   <div>
     <div class="jumbotron">
       <h1>{{ title }}</h1>
@@ -100,4 +100,4 @@ export default {
     h1:hover{
         font-size: 51px;
     }
-</style>
+</style>!-->

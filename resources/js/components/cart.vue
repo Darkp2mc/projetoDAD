@@ -1,5 +1,5 @@
 <template>
-  <div class="table-responsive">
+  <div class="table-responsive jumbotron">
     <h1 style="text-align: center; margin-top: 20px; margin-bottom: auto">
       {{ title }}
     </h1>
