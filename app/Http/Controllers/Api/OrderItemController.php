@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Resources\OrderItem as OrderItemResource;
-//use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\StoreOrderItemRequest;
 //use App\Http\Requests\UpdateProductRequest;
 use App\Models\OrderItem;
 
@@ -24,15 +24,14 @@ class OrderItemController extends Controller
     {
         return new OrderItemResource($order_item);
     }
-/*
-    public function store(StoreProductRequest $request)
+    
+    public function store(StoreOrderItemRequest $request)
     {
-        $product = new Product();
-        $product->fill($request->validated());
-        $product->save();
-        return response()->json(new ProductResource($product), 201);
+        $orderItem = new OrderItem();
+        $orderItem->fill($request->validated());
+        $orderItem->save();
+        return response()->json(new OrderItemResource($orderItem), 201);    
     }
-    */
     /* SEM StoreUserRequest */
     // public function store(Request $request)
     // {

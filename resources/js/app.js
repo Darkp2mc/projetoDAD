@@ -5,8 +5,10 @@ window.Vue = require('vue')
 import App from './App.vue'
 import VueRouter from 'vue-router'
 import Vue from 'vue';
+import VueSimpleAlert from "vue-simple-alert";
 
 Vue.use(VueRouter)
+Vue.use(VueSimpleAlert);
 
 import LayoutComponent from './components/layout'
 import LoginComponent from './components/login'

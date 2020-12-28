@@ -11,9 +11,14 @@ class Order extends Model
     use HasFactory, Notifiable;
 
     protected $fillable = [
+        'customer_id',
         'status',
         'notes',
+        'total_price',
+        'date',
         'prepared_by',
+        'opened_at',
+        'current_status_at',
         'delivred_by',
         'order_id',
         'product_id',
