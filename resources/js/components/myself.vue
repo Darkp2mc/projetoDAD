@@ -5,6 +5,7 @@
     </h1>
     <router-link to="/products" active-class="active">Products</router-link> -
     <a id="text" href="#/welcome" v-on:click="logout()">Logout</a>
+    <a class="editProfile" href="#/edit_profile">Edit profile</a>
     <hr />
 
     <figure class="snip1344">
@@ -33,6 +34,11 @@
 </template>
 
 <style>
+.editProfile{
+  float:right;
+  margin-right: 30px;
+}
+
 nav cart.router-link-exact-active {
   text-align: center;
 }
@@ -139,6 +145,7 @@ export default {
     return {
       title: "Your profile",
       logged: true,
+      
       user: {
         name: "",
         address: "",
@@ -147,20 +154,10 @@ export default {
         email: "",
         photo_url: "",
       },
+      
     };
   },
   methods: {
-    getUsers: async function () {
-      await axios
-        .get("/api/users/me")
-        .then((response) => {
-          this.$store.commit('setCurrentUser',response.data);
-          this.user = this.$store.state.currentUser;
-        })
-        .catch((error) => {
-          console.log("Invalid Request");
-        });
-    },
     logout: async function () {
       await axios
         .post("/api/logout")
@@ -175,8 +172,30 @@ export default {
         });
     },
   },
-  mounted: function () {
-    this.getUsers();
+  
+   mounted: async function () {
+    /*
+    this.$store.watch(() => this.$store.state.currentUser, async () => {
+      //do your code here 
+      console.log( this.$store.state.currentUser)
+      this.logged = true;
+      this.currentUser = this.$store.state.currentUser;
+    });
+    */
+    await axios
+      .get("/api/users/me")
+      .then((response) => {
+        console.log("User currently logged:");
+        console.dir(response.data);
+        this.logged = true;
+        this.user = response.data;
+      })
+      .catch((error) => {
+        this.currentUser = null;
+        console.log("Invalid Request");
+      });
+    //console.log("this.logged = "+this.logged);
   },
+  
 };
 </script>

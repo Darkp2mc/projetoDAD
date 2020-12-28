@@ -1,7 +1,5 @@
 <template>
   <div class="jumbotron">
-    <router-link to="/welcome">Back</router-link> - 
-    <router-link to="/products">Products</router-link>
     <h2>Register</h2>
     <div class="form-group">
       <label for="inputFullName">Full name</label>

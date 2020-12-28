@@ -1,8 +1,9 @@
 <template>
   <div class="jumbotron">
     <div class="table-responsive">
-      <router-link v-if="this.logged != true" to="/login">Login</router-link>
-      <div v-if="this.logged == true">
+      <router-link v-if="this.$store.state.logged != true" to="/login">Login</router-link>
+      <router-link class="h2" v-if="this.$store.state.logged == true && this.$store.state.currentUser.type == 'EC'" to="/cook">Cook Dashboard</router-link>
+      <div v-if="this.$store.state.logged == true">
         <h3
           style="
             position: absolute;
@@ -14,19 +15,19 @@
         >
           <img
             style="width: 15%; border-radius: 50%"
-            :src="'storage/fotos/' + this.currentUser.photo_url"
+            :src="'storage/fotos/' + this.$store.state.currentUser.photo_url"
           />
-          {{ this.currentUser.name }}
+          {{ this.$store.state.currentUser.name }}
         </h3>
         <a href="#/products" v-on:click.prevent="logout">Logout</a> -
         <router-link to="/myself">Myself</router-link>
       </div>
-      [ <router-link to="/cart">Cart</router-link> ]
+      <router-link to="/cart" v-if="this.$store.state.logged == true">Cart</router-link>
       <hr />
       <div class="form-group">
         <label for="department_id">Type:</label>
         <select class="form-control" v-model="selectedType">
-          <option v-for="type in types" :value="type.name">{{ type.name }}</option>
+          <option v-for="type in types" :key="type.name">{{ type.name }}</option>
         </select>
       </div>
       <div class="form-group">
@@ -57,6 +58,7 @@
           </tr>
         </thead>
         <tbody>
+          <!-- v-for="product in $store.state.productList" -->
           <tr
             v-for="product in $store.state.productList"
             :key="product.id"
@@ -115,6 +117,13 @@ export default {
         { id: 4, name: "dessert" },
       ],
       productsList: (this.productsList = [...this.$store.state.productList]),
+      pagination: {
+            options: [200,100,50,25,10,1],
+            perPage: 10,
+            totalPages: 1,
+            currentPage: 1,
+            totalShownIndexes: 5
+        }
     };
   },
   watch: {
@@ -154,10 +163,12 @@ export default {
           return false;
         });
     },
-    logout() {
-      axios
+    logout: async function() {
+      await axios
         .post("/api/logout")
         .then((response) => {
+          this.$store.state.logged = false
+          this.$store.commit('setCurrentUser',"");
           this.logged = false;
           console.log("User has logged out");
         })
@@ -216,18 +227,26 @@ export default {
       };
     },
   },
+  computed: {
+    getCurrentUser() {
+      return this.$store.getters.getCurrentUser;
+      this.currentUser = this.$store.getters.getCurrentUser;
+    },
+  },
+
   mounted: async function () {
+    //this.logout();
     await axios
       .get("/api/users/me")
       .then((response) => {
         console.log("User currently logged:");
         console.dir(response.data);
         this.logged = true;
-        this.currentUser = response.data;
+        this.$store.commit('setCurrentUser',response.data);
+        this.$store.state.logged = true
       })
       .catch((error) => {
-        this.currentUser = null;
-        console.log("Invalid Request");
+        console.log(error);
       });
     //console.log("this.logged = "+this.logged);
   },

@@ -1,9 +1,5 @@
 <template>
   <div>
-    <div class="jumbotron">
-      <h1>{{ title }}</h1>
-    </div>
-
     <div class="alert alert-success" v-if="showSuccess">
       <button type="button" class="close-btn" v-on:click="showSuccess = false">
         &times;
@@ -23,6 +19,7 @@
       :selected-product="currentProduct"
       @edit-click="editProduct"
       @delete-click="deleteProduct"
+      @add-click="addToCart"
     ></product-list>
 
   </div>
@@ -48,6 +45,7 @@ export default {
       products: [],
       orders: [],
       currentOrders: [],
+      cart: [],
     };
   },
   methods: {
@@ -96,6 +94,11 @@ export default {
       this.orders.forEach(element => {
         console.log("Teste"+element);
       });      
+    },
+    addToCart: function(product){
+      //this.currentProduct = product;
+      this.cart.push(product);
+      console.log(this.cart);
     }
   },
   mounted() {
@@ -103,3 +106,4 @@ export default {
   },
 };
 </script>
+

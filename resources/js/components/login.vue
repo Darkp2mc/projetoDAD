@@ -1,6 +1,5 @@
 <template>
   <div class="jumbotron">
-    <router-link to="/products">Products</router-link>
     <h2>Login</h2>
     <div class="form-group">
       <label for="inputEmail">Email</label>
@@ -48,10 +47,10 @@ export default {
     cancel: function () {
       this.$router.push("/welcome");
     },
-    login() {
+    login: async function() {
       console.dir(this.credentials);
       //mudar de página depois do login: this.$router.push('/products')
-      axios.get("/sanctum/csrf-cookie").then((response) => {
+      await axios.get("/sanctum/csrf-cookie").then((response) => {
         axios
           .post("/api/login", this.credentials)
           .then((response) => {
@@ -63,20 +62,14 @@ export default {
             else{
               console.log("User has logged in");
               this.$router.push("/products");
+              this.$store.commit('setCurrentUser',this.response.data);
+              this.$store.state.logged = true
             }
           })
           .catch((error) => {
-            alert("Invalid Authentication");
             this.failedMessage = "Invalid Authentication";
           });
       });
-    },
-    logout() {
-      axios
-        .post("/api/logout")
-        .catch((error) => {
-          console.log("Invalid Logout");
-        });
     },
   },
 };
