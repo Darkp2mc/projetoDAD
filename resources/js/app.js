@@ -16,6 +16,8 @@ import CartComponent from './components/cart.vue'
 import UserComponent from './components/user.vue'
 import MyselfComponent from './components/myself.vue'
 import RegisterComponent from './components/register'
+import MyselfEditComponent from './components/myselfEdit.vue'
+import CookComponent from './components/dashboards/cook.vue'
 
 import store from "./stores/global-store"
 
@@ -28,6 +30,8 @@ const routes = [
 	{ path: '/users', component: UserComponent },
 	{ path: '/myself', component: MyselfComponent },
 	{ path: '/register', component: RegisterComponent },
+	{ path: '/edit_profile', component: MyselfEditComponent },
+	{ path: '/cook', component: CookComponent},
 	{ path: '*', redirect: '/welcome' }
 ]
 

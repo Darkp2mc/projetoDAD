@@ -26,8 +26,6 @@
       />
     </div>
     
-   
-
     <div class="form-group">
       <a
         class="btn btn-default"
