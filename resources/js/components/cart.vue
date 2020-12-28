@@ -54,14 +54,21 @@
           <th></th>
           <th></th>
           <th>{{Math.round((total + Number.EPSILON) * 100) / 100}}€</th>
-          <th><a
+          <th>
+            <a
               class="btn btn-sm btn-success"
               v-on:click.prevent="removeAll()"
-              >Remove All</a
-            ></th>
+              >Remove All</a>
+          </th>
         </tr>
       </thead>
     </table>
+    <div>
+      <a
+        class="btn btn-primary btn-block"
+        v-on:click.prevent="makeOrder()"
+        >Make Order</a>
+    </div>
   </div>
 </template>
 
@@ -88,6 +95,8 @@ export default {
       cart: [],
       item: [],
       total: 0,
+      order: [],
+      orderItem: []
     };
   },
   mounted: async function () {
@@ -157,6 +166,36 @@ export default {
       this.total = 0;
       this.cart = [];
       this.$store.commit("removeAllItemsFromCart", this.currentUser.id);
+    },
+    makeOrder: function(){
+      this.$confirm("Are you sure that you want to make this order?","",'warning').then(() => {
+        this.$prompt("Additional comments:").then((text) => {
+          var currentdate = new Date();
+          this.order = {'status': 'H', 
+                        'customer_id': parseInt(this.currentUser.id), 
+                        'notes': text, 
+                        'total_price': Math.round((this.total + Number.EPSILON) * 100) / 100, 
+                        'date': currentdate.getFullYear() + '-' + currentdate.getMonth() + '-' + currentdate.getDate(), 
+                        'opened_at':  currentdate.getFullYear()+'-'+currentdate.getMonth()+'-'+currentdate.getDate()+' '+currentdate.getHours()+":"+currentdate.getMinutes()+":"+currentdate.getSeconds(), 
+                        'current_status_at': currentdate.getFullYear()+'-'+currentdate.getMonth()+'-'+currentdate.getDate()+' '+currentdate.getHours()+":"+currentdate.getMinutes()+":"+currentdate.getSeconds()}
+          axios.post("api/order",this.order)
+               .then((response) => {
+                  this.makeOrderItems(response.data.id);
+                  this.removeAll();
+                });
+        });
+      });
+    },
+    makeOrderItems: function(orderId){
+      for (var i = this.cart.length - 1; i >= 0; i--) {
+        this.orderItem = [];
+        this.orderItem = {'order_id': orderId,
+                          'product_id': this.cart[i].product.id,
+                          'quantity': this.cart[i].quantity,
+                          'unit_price': this.cart[i].product.price,
+                          'sub_total_price': this.cart[i].subTotal}
+        axios.post("api/order_items",this.orderItem);
+      }
     }
   },
 };

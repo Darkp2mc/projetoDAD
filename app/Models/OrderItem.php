@@ -15,6 +15,7 @@ class OrderItem extends Model
         return $this->belongsTo(Order::class);
     }
 
+    public $timestamps = false;
 
     protected $fillable = [
        'order_id',

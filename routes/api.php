@@ -12,6 +12,9 @@ use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\OrderItemController as OrderItem;
 use App\Http\Controllers\Api\OrderItemController;
 
+use App\Http\Controllers\OrderController as Order;
+use App\Http\Controllers\Api\OrderController;
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -67,3 +70,10 @@ Route::get('order_items/{order_item}',          [OrderItemController::class, 'sh
 Route::post('order_items',                   [OrderItemController::class, 'store']);
 Route::put('order_items/{order_item}',          [OrderItemController::class, 'update']);
 Route::delete('order_items/{order_item}',       [OrderItemController::class, 'destroy']);
+
+Route::get('order',                    [OrderController::class, 'index']);
+Route::get('order/{order}',          [OrderController::class, 'show']);
+
+Route::post('order',                   [OrderController::class, 'store']);
+Route::put('order/{order}',          [OrderController::class, 'update']);
+Route::delete('order/{order}',       [OrderController::class, 'destroy']);
