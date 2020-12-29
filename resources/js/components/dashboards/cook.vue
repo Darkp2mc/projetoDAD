@@ -1,103 +1,132 @@
-<!--<template>
-  <div>
-    <div class="jumbotron">
-      <h1>{{ title }}</h1>
-    </div>
-    <user-list
-      :users="users"
-      :selected-user="currentUser"
-      @edit-click="editUser"
-      @delete-click="deleteUser"
-    ></user-list>
-    <div
-      class="alert alert-success"
-      v-if="showSuccess"
-    >
-      <button
-        type="button"
-        class="close-btn"
-        v-on:click="showSuccess=false"
-      >&times;</button>
-      <strong>{{ successMessage }}</strong>
-    </div>
-    <user-edit
-      v-if="currentUser"
-      :user="currentUser"
-      :departments="departments"
-      @user-saved="saveUser"
-      @user-canceled="cancelEdit"
-    ></user-edit>
+<template>
+  <div class="jumbotron">
+    <h1>Cook Dashboard</h1>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th>Order ID</th>
+          <th>Customer</th>
+          <th>Started at</th>
+          <th>Elapsed time</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <td>{{ currentOrder.id }}</td>
+        <td>{{ currentOrder.customer_id }}</td>
+        <td>{{ currentOrder.created_at }}</td>
+        <td>{{ currentOrder.updated_at }}</td>
+        <td>{{ currentOrder.notes }}</td>
+      </tbody>
+      <th>Items in order</th>
+      <tr>
+        <th>Name</th>
+        <th>Quantity</th>
+        <th>Description</th>
+      </tr>
+      <tr v-for="item in this.orderItems" :key="item.id">
+        <td>{{ item.product_id }}</td>
+        <td>{{ item.quantity }}</td>
+      </tr>
+    </table>
   </div>
 </template>
 
 <script>
-import UserListComponent from './userList'
-import UserEditComponent from './userEdit'
+import OrderListComponent from "../orderList";
+import OrderEditComponent from "../orderEdit";
+
 export default {
   components: {
-    'user-list': UserListComponent,
-    'user-edit': UserEditComponent,
+    "order-list": OrderListComponent,
+    "order-edit": OrderEditComponent,
   },
   data: function () {
     return {
-      title: 'List Users',
+      title: "List Orders",
       showSuccess: false,
       showFailure: false,
-      successMessage: '',
-      failMessage: '',
-      currentUser: null,
-      users: [],
+      successMessage: "",
+      failMessage: "",
       logged: false,
-      departments: []
-    }
+      ordersList: [],
+      currentOrder: null,
+      users: [],
+      orderUser: null,
+      currentUser: null,
+
+      orderItemsList: [],
+      orderItems: [],
+    };
+  },
+  computed: {
+    getUsers() {
+      this.users = this.$store.getters.getUsers;
+    },
+    getCurrentUser() {
+      this.currentUser = this.$store.getters.getCurrentUser;
+    },
   },
   methods: {
-    editUser: function (user) {
-      this.currentUser = user
-      this.showSuccess = false
-    },
-    deleteUser: function (user) {
-      axios.delete('api/users/' + user.id)
-        .then(response => {
-          this.showSuccess = true
-          this.successMessage = 'User Deleted'
-          this.getUsers()
+    getOrders: async function () {
+      //this.$store.commit("getOrders");
+      await axios
+        .get("api/order")
+        .then((response) => {
+          this.ordersList = response.data.data;
+          for (var i = 0; i < this.ordersList.length; i++) {
+            if (this.ordersList[i].status == "H") {
+              this.currentOrder = this.ordersList[i];
+              break;
+            }
+          }
         })
+        .catch((error) => {
+          console.log(error);
+        });
     },
-    saveUser: function (user) {
-      this.showSuccess = true
-      this.successMessage = 'User Saved'
-      // Copies user properties to this.currentUser
-      // without changing this.currentUser reference
-      Object.assign(this.currentUser, user)
-      this.currentUser = null
+    getOrderItems: async function () {
+      await axios.get("api/order_items").then((response) => {
+        this.orderItemsList = response.data.data;
+
+        for (var i = this.orderItemsList.length - 1; i >= 0; i--) {
+          if (this.orderItemsList[i].order_id == 1908) {
+            this.orderItems.push(this.orderItemsList[i]);
+          }
+          if (this.orderItemsList[i + 1].order_id != 1908) {
+            break;
+          }
+        }
+        console.log(this.orderItems);
+      });
     },
-    cancelEdit: function (user) {
-      this.showSuccess = false
-      // Copies user properties to this.currentUser
-      // without changing this.currentUser reference
-      Object.assign(this.currentUser, user)
-      this.currentUser = null
+    /*
+    filterOrder: function () {
+      this.getCurrentUser;
+      for (var i = this.ordersList.length - 1; i >= 0; i--) {
+        if (this.ordersList[i].prepared_by !== this.currentUser.id) {
+          this.ordersList.splice(i, 1);
+        }
+      }
     },
-    getUsers: function () {
-      axios.get('api/orders')
-        .then(response => { this.users = response.data.data })
-    },
+    */
   },
-  mounted () {
-    this.getOrders()
+  mounted() {
+    this.getOrders();
+    this.getOrderItems();
+
     // Se já existe o array com departamentos no $root.departments
     // Não vale a pena voltar a carregar os departamentos da API:
-  }
-}
+  },
+};
 </script>
 
 <style scoped>
-    h1{
-        text-align: center;
-        font-size: 50px;
-    }
-    h1:hover{
-        font-size: 51px;
-    }
-</style>!-->
+h1 {
+  font-size: 50px;
+  text-align: center;
+}
+h1:hover {
+  font-size: 53px;
+}
+</style>

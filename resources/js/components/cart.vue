@@ -1,6 +1,6 @@
 <template>
   <div class="table-responsive jumbotron">
-    <h1 style="text-align: center; margin-top: 20px; margin-bottom: auto">
+    <h1 style="text-align: center; margin-top: 20px; margin-bottom: auto; font-size:50px;">
       {{ title }}
     </h1>
     <router-link to="/products" active-class="active">Products</router-link> -
@@ -171,6 +171,7 @@ export default {
       this.$confirm("Are you sure that you want to make this order?","",'warning').then(() => {
         this.$prompt("Additional comments:").then((text) => {
           var currentdate = new Date();
+          
           this.order = {'status': 'H', 
                         'customer_id': parseInt(this.currentUser.id), 
                         'notes': text, 
