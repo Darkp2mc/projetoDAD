@@ -22,7 +22,8 @@
         <a href="#/products" v-on:click.prevent="logout">Logout</a> -
         <router-link to="/myself">Myself</router-link>
       </div>
-      <router-link to="/cart" v-if="this.$store.state.logged == true">Cart</router-link>
+      <router-link to="/cart" v-if="this.$store.state.logged == true">Cart - </router-link>
+      <router-link to="/orders" v-if="this.$store.state.logged == true">Orders</router-link>
       <hr />
       <div class="form-group">
         <label for="department_id">Type:</label>
@@ -115,6 +116,7 @@ export default {
         { id: 2, name: "cold dish" },
         { id: 3, name: "drink" },
         { id: 4, name: "dessert" },
+        { id: 5, name: "None" },
       ],
       productsList: (this.productsList = [...this.$store.state.productList]),
       pagination: {
@@ -207,7 +209,7 @@ export default {
       this.$store.commit("setProductList", this.productsList);
     },
     filterType: function () {
-      if (this.selectedType != null)
+      if (this.selectedType != null && this.selectedType != 'None')
         for (var i = this.productsList.length - 1; i >= 0; i--) {
           if (this.productsList[i].type !== this.selectedType) {
             this.productsList.splice(i, 1);
