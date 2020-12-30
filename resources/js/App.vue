@@ -1,6 +1,46 @@
 <template>
   <div id="menuOptions" class="index">
-    <router-view></router-view>
+    <div>
+        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+            <div class="container">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <!-- Left Side Of Navbar -->
+                    <ul class="navbar-nav mr-auto">
+
+                    </ul>
+
+                    <!-- Right Side Of Navbar -->
+                    <ul class="navbar-nav ml-auto">
+                        <!-- Authentication Links -->
+                        <li class="nav-item" v-if="!logged">
+                            <router-link to="/login" class="nav-link" active-class="active">Login</router-link>
+                        </li>
+                        <li class="nav-item" v-if="!logged">
+                            <router-link to="/register" class="nav-link" active-class="active">Register</router-link>
+                        </li>
+                        <li class="nav-item " v-if="logged">
+                            <router-link to="/" class="nav-link" active-class="active" v-on:click.native="logout">Logout</router-link>
+                        </li>
+                        <li class="nav-item " v-if="logged">
+                            <router-link to="/products" class="nav-link" active-class="active">Products</router-link>
+                        </li>
+                        <li class="nav-item " v-if="logged">
+                            <router-link to="/cart" class="nav-link" active-class="active">Cart</router-link>
+                        </li>
+                        <li class="nav-item " v-if="logged">
+                            <router-link to="/orders" class="nav-link" active-class="active">Orders</router-link>
+                        </li>
+                    </ul>
+                </div>
+                
+            </div>
+        </nav>
+    </div>
+    <router-view @loginNav="loginNav"></router-view>
     <hr />
   </div>
 </template>
@@ -22,6 +62,40 @@ export default {
     cart: CartComponent,
     register: RegisterComponent,
     order: OrderComponent
+  },
+  data: function(){
+      return {
+          logged: false,
+      };
+  },
+  mounted () {
+      this.myself();
+  },
+  methods: {
+    logout: function () {
+        axios.post('/api/logout').then(response => {
+          console.log('User has logged out')
+          this.logged = false
+        })
+        .catch(error => {
+            console.log('Invalid Logout')
+        })
+    },
+    myself: function () {
+      axios
+        .get("/api/users/me")
+        .then((response) => {
+          console.log("User currently logged:");
+          this.logged = true;
+          console.dir(response.data);
+        })
+        .catch((error) => {
+          console.log("Invalid Request");
+        });
+    },
+    loginNav: function (){
+      this.logged = true;
+    }
   }
 };
 </script>

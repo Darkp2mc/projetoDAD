@@ -36,7 +36,11 @@ export default new Vuex.Store({
 			state.shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'));
 			//this way is more efficient because when somebody add products usually is the same one consecutively
 			//
-			if (state.shoppingCart.length == 0) {
+			if (state.shoppingCart == null) {
+				state.shoppingCart = [];
+				state.shoppingCart.push({ "currentUserId": data.currentUserId, "orderItem": [{ "product": data.product, "quantity": 1, "subTotal": parseFloat(data.product.price) }], "total": parseFloat(data.product.price) })
+			}
+			else if(state.shoppingCart.length == 0){
 				state.shoppingCart = [];
 				state.shoppingCart.push({ "currentUserId": data.currentUserId, "orderItem": [{ "product": data.product, "quantity": 1, "subTotal": parseFloat(data.product.price) }], "total": parseFloat(data.product.price) })
 			}

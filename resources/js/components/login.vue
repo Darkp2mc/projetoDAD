@@ -60,7 +60,7 @@ export default {
               this.logout()
             }
             else{
-              console.log("User has logged in");
+              this.$emit('loginNav', true);
               this.$router.push("/products");
               this.$store.commit('setCurrentUser',this.response.data);
               this.$store.state.logged = true
