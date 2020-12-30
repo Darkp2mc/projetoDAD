@@ -27,7 +27,7 @@ class Order extends JsonResource
             'current_status_at' => $this->current_status_at,
             'closed_at'         => $this->closed_at,
             'preparation_time'  => $this->preparation_time,
-            'delivered_time'    => $this->delivered_time,
+            'delivery_time'     => $this->delivery_time,
             'total_time'        => $this->total_time,
             'created_at'        => $this->created_at,
             'updated_at'        => $this->updated_at

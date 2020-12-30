@@ -19,11 +19,13 @@ class Order extends Model
         'prepared_by',
         'opened_at',
         'current_status_at',
-        'delivred_by',
+        'delivered_by',
         'order_id',
         'product_id',
         'unit_price',
-        
+        'preparation_time',
+        'delivery_time',
+        'total_time'
         
     ];
 

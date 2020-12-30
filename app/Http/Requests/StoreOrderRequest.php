@@ -35,7 +35,7 @@ class StoreOrderRequest extends FormRequest
             'current_status_at' => 'required',
             'closed_at'         => 'nullable',
             'preparation_time'  => 'nullable',
-            'delivered_time'    => 'nullable',
+            'delivery_time'    => 'nullable',
             'total_time'        => 'nullable'
         ];
     }
