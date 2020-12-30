@@ -63,7 +63,7 @@
         </tr>
       </thead>
     </table>
-    <div>
+    <div v-if="cart.length > 0">
       <a
         class="btn btn-primary btn-block"
         v-on:click.prevent="makeOrder()"
@@ -125,6 +125,20 @@ export default {
         })
         .catch((error) => {
           console.log("Invalid Request");
+        });
+    },
+    logout: async function() {
+      await axios
+        .post("/api/logout")
+        .then((response) => {
+          this.$store.state.logged = false
+          this.$store.commit('setCurrentUser',"");
+          this.logged = false;
+          console.log("User has logged out");
+          this.$router.push('welcome') 
+        })
+        .catch((error) => {
+          console.log("Invalid Logout");
         });
     },
     getCart: function(){
@@ -197,6 +211,9 @@ export default {
                           'sub_total_price': this.cart[i].subTotal}
         axios.post("api/order_items",this.orderItem);
       }
+    },
+    assignOrderToCook: function(orderId){
+      
     }
   },
 };

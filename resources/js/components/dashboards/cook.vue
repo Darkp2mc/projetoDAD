@@ -1,34 +1,64 @@
 <template>
   <div class="jumbotron">
+    <div class="dropdown pull-left">
+      <button
+        class="btn btn-secondary dropdown-toggle"
+        type="button"
+        id="dropdownMenuButton"
+        data-toggle="dropdown"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        Options
+      </button>
+      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" href="#/products">Products</a>
+        <a class="dropdown-item" href="#/welcome">Logout</a>
+      </div>
+    </div>
+    <br />
+    <br />
     <h1>Cook Dashboard</h1>
-    <table class="table table-hover">
-      <thead>
+    <div v-if="this.currentOrder == null">
+      <h2>Waiting for a new order...</h2>
+    </div>
+    <div v-if="this.currentOrder != null">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Started at</th>
+            <th>Elapsed time</th>
+            <th>Notes</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <td>{{ currentOrder.id }}</td>
+          <td>{{ orderUser.name }}</td>
+          <td>{{ currentOrder.opened_at }}</td>
+          <td>{{ currentOrder.updated_at }}</td>
+          <td>{{ currentOrder.notes }}</td>
+          <button class="btn btn-success">Ready</button>
+        </tbody>
+        <th>Items in order</th>
         <tr>
-          <th>Order ID</th>
-          <th>Customer</th>
-          <th>Started at</th>
-          <th>Elapsed time</th>
-          <th>Notes</th>
+          <th>Product</th>
+          <th>Name</th>
+          <th>Type</th>
+          <th>Description</th>
         </tr>
-      </thead>
-      <tbody>
-        <td>{{ currentOrder.id }}</td>
-        <td>{{ currentOrder.customer_id }}</td>
-        <td>{{ currentOrder.created_at }}</td>
-        <td>{{ currentOrder.updated_at }}</td>
-        <td>{{ currentOrder.notes }}</td>
-      </tbody>
-      <th>Items in order</th>
-      <tr>
-        <th>Name</th>
-        <th>Quantity</th>
-        <th>Description</th>
-      </tr>
-      <tr v-for="item in this.orderItems" :key="item.id">
-        <td>{{ item.product_id }}</td>
-        <td>{{ item.quantity }}</td>
-      </tr>
-    </table>
+        <tr v-for="item in this.orderProducts" :key="item.id">
+          <td style="width: 10%">
+            <img style="width: 100%" :src="'storage/products/' + item.photo_url" />
+          </td>
+          <td>{{ item.name }}</td>
+          <td>{{ item.type }}</td>
+          <td>{{ item.description }}</td>
+        </tr>
+      </table>
+    </div>
   </div>
 </template>
 
@@ -51,12 +81,16 @@ export default {
       logged: false,
       ordersList: [],
       currentOrder: null,
+
       users: [],
       orderUser: null,
       currentUser: null,
 
       orderItemsList: [],
       orderItems: [],
+
+      productsList: (this.productsList = [...this.$store.state.productList]),
+      orderProducts: [],
     };
   },
   computed: {
@@ -65,6 +99,9 @@ export default {
     },
     getCurrentUser() {
       this.currentUser = this.$store.getters.getCurrentUser;
+    },
+    getProductsList() {
+      this.productsList = this.$store.getters.getProductList;
     },
   },
   methods: {
@@ -84,20 +121,36 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+      await this.getOrderItems();
+      await this.getItemInfo();
+      await this.getCostumerInfo();
     },
     getOrderItems: async function () {
       await axios.get("api/order_items").then((response) => {
         this.orderItemsList = response.data.data;
 
         for (var i = this.orderItemsList.length - 1; i >= 0; i--) {
-          if (this.orderItemsList[i].order_id == 1908) {
+          if (this.orderItemsList[i].order_id == this.currentOrder.id) {
             this.orderItems.push(this.orderItemsList[i]);
-          }
-          if (this.orderItemsList[i + 1].order_id != 1908) {
-            break;
+            if (this.orderItemsList[i - 1].order_id != this.currentOrder.id) {
+              break;
+            }
           }
         }
-        console.log(this.orderItems);
+      });
+    },
+    getItemInfo: function () {
+      this.orderItems.forEach((element) => {
+        for (var i = 0; i < this.productsList.length - 1; i++) {
+          if (element.product_id == this.productsList[i].id) {
+            this.orderProducts.push(this.productsList[i]);
+          }
+        }
+      });
+    },
+    getCostumerInfo: async function () {
+      await axios.get("/api/users/" + this.currentOrder.customer_id).then((response) => {
+        this.orderUser = response.data.data;
       });
     },
     /*
@@ -111,9 +164,8 @@ export default {
     },
     */
   },
-  mounted() {
+  mounted: function () {
     this.getOrders();
-    this.getOrderItems();
 
     // Se já existe o array com departamentos no $root.departments
     // Não vale a pena voltar a carregar os departamentos da API:
@@ -125,8 +177,22 @@ export default {
 h1 {
   font-size: 50px;
   text-align: center;
+  margin-bottom: 5%;
 }
 h1:hover {
   font-size: 53px;
+}
+h2 {
+  position: relative;
+  font-size: 50px;
+  text-align: center;
+  margin-bottom: 5%;
+  color: white;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
 }
 </style>

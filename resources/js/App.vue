@@ -8,6 +8,7 @@
 <script>
 import LayoutComponent from "./components/layout";
 import ProductComponent from "./components/product";
+import OrderComponent from "./components/orders/order";
 import WelcomeComponent from "./components/welcome";
 import UserComponent from "./components/user";
 import CartComponent from "./components/cart";
@@ -20,6 +21,7 @@ export default {
     product: ProductComponent,
     cart: CartComponent,
     register: RegisterComponent,
+    order: OrderComponent
   }
 };
 </script>

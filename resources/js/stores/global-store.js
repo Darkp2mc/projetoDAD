@@ -100,7 +100,8 @@ export default new Vuex.Store({
 		setShoppingCart(state, data) {
 			state.shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'));
 			//this way is more efficient because when somebody add products usually is the same one consecutively
-			if (state.shoppingCart == null) {
+			//
+			if (state.shoppingCart.length == 0) {
 				state.shoppingCart = [];
 				state.shoppingCart.push({ "currentUserId": data.currentUserId, "orderItem": [{ "product": data.product, "quantity": 1, "subTotal": parseFloat(data.product.price) }], "total": parseFloat(data.product.price) })
 			}
@@ -174,6 +175,13 @@ export default new Vuex.Store({
 		},
 		getFetchedUser: state=>{
 			return state.fetchedUser
+		},
+		getProductList: state=>{
+			return state.productList
+		},
+		getUsers: state=>{
+			console.log(state.users)
+			return state.users
 		}
 
 	},
@@ -202,7 +210,7 @@ export default new Vuex.Store({
 				}
 			})
 		},
-		getUsers(state) {
+		setUsers(state) {
 			return new Promise((resolve, reject) => {
 				// Be sure to set the default value to `undefined` under the `state` object.
 				axios.get("/api/users")
