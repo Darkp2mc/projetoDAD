@@ -2,7 +2,15 @@
   <div class="jumbotron">
     <div class="table-responsive">
       <router-link v-if="this.$store.state.logged != true" to="/login">Login</router-link>
-      <router-link class="h2" v-if="this.$store.state.logged == true && this.$store.state.currentUser.type == 'EC'" to="/cook">Cook Dashboard</router-link>
+      <router-link
+        class="h2"
+        v-if="
+          this.$store.state.logged == true && this.$store.state.currentUser.type == 'EC'
+        "
+        to="/cook"
+        >Cook Dashboard</router-link
+      >
+      
       <div v-if="this.$store.state.logged == true">
         <h3
           style="
@@ -18,7 +26,9 @@
             :src="'storage/fotos/' + this.$store.state.currentUser.photo_url"
           />
           {{ this.$store.state.currentUser.name }}
+          
         </h3>
+        
         <a href="#/products" v-on:click.prevent="logout">Logout</a> -
         <router-link to="/myself">Myself</router-link>
       </div>
@@ -120,12 +130,12 @@ export default {
       ],
       productsList: (this.productsList = [...this.$store.state.productList]),
       pagination: {
-            options: [200,100,50,25,10,1],
-            perPage: 10,
-            totalPages: 1,
-            currentPage: 1,
-            totalShownIndexes: 5
-        }
+        options: [200, 100, 50, 25, 10, 1],
+        perPage: 10,
+        totalPages: 1,
+        currentPage: 1,
+        totalShownIndexes: 5,
+      },
     };
   },
   watch: {
@@ -145,7 +155,12 @@ export default {
     addToCart: function (product) {
       //this.$emit("add-click", product);
       if (this.currentUser != null) {
-        this.$store.commit('setShoppingCart',{"product":product,"currentUserId":this.currentUser.id});
+        this.$store.commit("setShoppingCart", {
+          product: product,
+          currentUserId: this.currentUser.id,
+          
+        });
+        this.$emit("add-click",product);
       }
     },
     removeFromCart: function (product) {
@@ -165,12 +180,12 @@ export default {
           return false;
         });
     },
-    logout: async function() {
+    logout: async function () {
       await axios
         .post("/api/logout")
         .then((response) => {
-          this.$store.state.logged = false
-          this.$store.commit('setCurrentUser',"");
+          this.$store.state.logged = false;
+          this.$store.commit("setCurrentUser", "");
           this.logged = false;
           console.log("User has logged out");
         })
@@ -219,10 +234,10 @@ export default {
     showList() {
       var modal = document.getElementById("shoppingList");
       var btn = document.getElementById("show");
-      btn.onclick = function() {
+      btn.onclick = function () {
         modal.style.display = "block";
       };
-      window.onclick = function(event) {
+      window.onclick = function (event) {
         if (event.target == modal) {
           modal.style.display = "none";
         }
@@ -244,8 +259,8 @@ export default {
         console.log("User currently logged:");
         console.dir(response.data);
         this.logged = true;
-        this.$store.commit('setCurrentUser',response.data);
-        this.$store.state.logged = true
+        this.$store.commit("setCurrentUser", response.data);
+        this.$store.state.logged = true;
         this.currentUser = response.data;
       })
       .catch((error) => {

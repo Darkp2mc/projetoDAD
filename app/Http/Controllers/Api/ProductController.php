@@ -10,7 +10,8 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Models\Product;
 
 class ProductController extends Controller
-{
+{   
+    
     public function index(Request $request)
     {
         if ($request->has('page')) {        

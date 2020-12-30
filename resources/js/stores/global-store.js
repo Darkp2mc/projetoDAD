@@ -4,26 +4,88 @@ import Vuex from "vuex"
 import createPersistedState from 'vuex-persistedstate'
 
 Vue.use(Vuex)
+
+const moduleCook = {
+	// Plugin necessário para os dados não serem apagados
+    // quando se fecha o browser
+    plugins: [createPersistedState({
+        storage: window.sessionStorage,
+    })],
+    state: {
+        logged: null,
+        orderList: [],
+        currentOrder: null,
+    },
+    mutations: {
+        clearOrderList(state) {
+            state.orderList = []
+        },
+        setOrderList(state, orderList) {
+            state.orderList = orderList
+        },
+        setCurrentOrder(state, currentOrder) {
+            state.currentOrder = currentOrder
+		},
+		getOrders(state) {
+			state.orderList = JSON.parse(localStorage.getItem('orderList'));
+
+			if (state.orderList == null) {
+				state.orderList = [];
+			}
+		},
+    },
+    getters: {
+        getCurrentOrder: state => {
+            return state.currentOrder
+        },
+    },
+    actions: {
+        getOrderData(state) {
+            return new Promise((resolve, reject) => {
+                // Be sure to set the default value to `undefined` under the `state` object.
+                axios.get("/api/order")
+                    .then((response) => {
+                        //console.log(response.data);
+                        state.commit('setOrderList', response.data);
+                        resolve(response.data);
+                    })
+                    .catch((error) => {
+                        //this.currentUser = null;
+                        reject(error);
+                        console.log("Invalid Request");
+                    });
+            })
+        }
+    },
+}
+
 export default new Vuex.Store({
+	modules:{
+		cook: moduleCook,
+	},
+
 	// Plugin necessário para os dados não serem apagados
 	// quando se fecha o browser
 	plugins: [createPersistedState({
-        storage: window.sessionStorage,
-    })],
+		storage: window.sessionStorage,
+	})],
 	state: {
 		logged: null,
 		productList: [],
+		users: [],
 		currentUser: null,
-		shoppingCart: []
+		shoppingCart: [],
+		fetchedUser: null,
 	},
 	mutations: {
-		getShoppingCart (state) {
-    		state.shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'));
-    		if(state.shoppingCart.length == 0){
-    			state.shoppingCart = [];
-    		}
-    },
-		clearProductList (state) {
+		getShoppingCart(state) {
+			state.shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'));
+
+			if (state.shoppingCart == null) {
+				state.shoppingCart = [];
+			}
+		},
+		clearProductList(state) {
 			state.productList = []
 		},
 		setProductList(state, productList) {
@@ -32,7 +94,10 @@ export default new Vuex.Store({
 		setCurrentUser(state, currentUser) {
 			state.currentUser = currentUser
 		},
-		setShoppingCart(state, data){
+		setFetchedUser(state, user){
+			state.fetchedUser = user; 
+		},
+		setShoppingCart(state, data) {
 			state.shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'));
 			//this way is more efficient because when somebody add products usually is the same one consecutively
 			//
@@ -48,7 +113,7 @@ export default new Vuex.Store({
 				for (var i = state.shoppingCart.length - 1; i >= 0; i--) {
 					if (state.shoppingCart[i].currentUserId == data.currentUserId) {
 						if (state.shoppingCart[i].orderItem.length - 1 == -1) {
-							state.shoppingCart[i].orderItem.push({"product": data.product, "quantity": 1, "subTotal": parseFloat(data.product.price)});
+							state.shoppingCart[i].orderItem.push({ "product": data.product, "quantity": 1, "subTotal": parseFloat(data.product.price) });
 							break;
 						}
 						for (var j = state.shoppingCart[i].orderItem.length - 1; j >= 0; j--) {
@@ -58,7 +123,7 @@ export default new Vuex.Store({
 								break;
 							}
 							else if (j == 0) {
-								state.shoppingCart[i].orderItem.push({"product": data.product, "quantity": 1, "subTotal": parseFloat(data.product.price)});
+								state.shoppingCart[i].orderItem.push({ "product": data.product, "quantity": 1, "subTotal": parseFloat(data.product.price) });
 							}
 						}
 						break;
@@ -68,40 +133,40 @@ export default new Vuex.Store({
 					}
 				}
 			}
-      		localStorage.setItem('shoppingCart',JSON.stringify(state.shoppingCart));
+			localStorage.setItem('shoppingCart', JSON.stringify(state.shoppingCart));
 
 		},
 
-		changeItemQuantity(state, data){
+		changeItemQuantity(state, data) {
 			state.shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'));
-			
+
 			for (var i = state.shoppingCart.length - 1; i >= 0; i--) {
 				if (state.shoppingCart[i].currentUserId = data.currentUserId) {
 					state.shoppingCart[i].orderItem[data.id] = data.item;
 					break;
 				}
 			}
-			localStorage.setItem('shoppingCart',JSON.stringify(state.shoppingCart));
+			localStorage.setItem('shoppingCart', JSON.stringify(state.shoppingCart));
 		},
-    
-		removeItemFromCart(state, data){
+
+		removeItemFromCart(state, data) {
 			state.shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'));
 			for (var i = state.shoppingCart.length - 1; i >= 0; i--) {
 				if (state.shoppingCart[i].currentUserId = data.currentUserId) {
-					state.shoppingCart[i].orderItem.splice(data.id,1);
+					state.shoppingCart[i].orderItem.splice(data.id, 1);
 					break;
 				}
 			}
-			localStorage.setItem('shoppingCart',JSON.stringify(state.shoppingCart));
+			localStorage.setItem('shoppingCart', JSON.stringify(state.shoppingCart));
 		},
-		removeAllItemsFromCart(state, currentUserId){
+		removeAllItemsFromCart(state, currentUserId) {
 			state.shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'));
-    		if(state.shoppingCart.length == 0)
-    			state.shoppingCart = [];
+			if (state.shoppingCart == null)
+				state.shoppingCart = [];
 
 			for (var i = state.shoppingCart.length - 1; i >= 0; i--) {
 				if (state.shoppingCart[i].currentUserId = currentUserId) {
-					state.shoppingCart.splice(i,1);
+					state.shoppingCart.splice(i, 1);
 					break;
 				}
 			}
@@ -112,6 +177,17 @@ export default new Vuex.Store({
 		getCurrentUser: state => {
 			return state.currentUser
 		},
+		getFetchedUser: state=>{
+			return state.fetchedUser
+		},
+		getProductList: state=>{
+			return state.productList
+		},
+		getUsers: state=>{
+			console.log(state.users)
+			return state.users
+		}
+
 	},
 	actions: {
 		getUserData(context) {
@@ -137,7 +213,27 @@ export default new Vuex.Store({
 					resolve(this.state.currentUser);
 				}
 			})
-		}
+		},
+		setUsers(state) {
+			return new Promise((resolve, reject) => {
+				// Be sure to set the default value to `undefined` under the `state` object.
+				axios.get("/api/users")
+					.then((response) => {
+						//console.log("User currently logged:");
+						//console.dir(response.data);
+						//this.logged = true;
+						//this.currentUser = response.data;
+						state.users = response.data;
+						//resolve(response.data);
+					})
+					.catch((error) => {
+						//this.currentUser = null;
+						reject(error);
+						console.log("Invalid Request");
+					});
+			})
+		},
+		
 	},
-	
+
 })
