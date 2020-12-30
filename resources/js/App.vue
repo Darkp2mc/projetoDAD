@@ -26,7 +26,7 @@
                             <router-link to="/" class="nav-link" active-class="active" v-on:click.native="logout">Logout</router-link>
                         </li>
                         <li class="nav-item " v-if="logged">
-                            <router-link to="/products" class="nav-link" active-class="active">Products</router-link>
+                            <router-link to="/" class="nav-link" active-class="active">Products</router-link>
                         </li>
                         <li class="nav-item " v-if="logged">
                             <router-link to="/cart" class="nav-link" active-class="active">Cart</router-link>
