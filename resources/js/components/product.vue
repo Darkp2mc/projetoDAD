@@ -15,6 +15,12 @@
       @product-canceled="cancelEdit"
     ></product-edit>
 
+    <sliding-pagination
+      :current="currentPage"
+      :total="totalPages"
+      @page-change="pageChangeHandler"
+    ></sliding-pagination>
+
     <product-list
       :currentUser="currentUser"
       :products="products"
@@ -23,15 +29,16 @@
       @delete-click="deleteProduct"
       @add-click="addToCart"
     ></product-list>
-
   </div>
 </template>
 
 <script>
+import SlidingPagination from "vue-sliding-pagination";
 import ProductListComponent from "./productList";
 import ProductEditComponent from "./productEdit";
 export default {
   components: {
+    SlidingPagination,
     "product-list": ProductListComponent,
     "product-edit": ProductEditComponent,
   },
@@ -49,15 +56,26 @@ export default {
       orders: [],
       currentOrders: [],
       cart: [],
+      currentPage: 1,
+      totalPages: 10,
     };
   },
+  computed:{
+    getTotalProducts() {
+      this.totalPages = parseInt(this.$store.getters.getTotalProducts/5+1);
+    },
+  },
   methods: {
+    pageChangeHandler(selectedPage) {
+      this.currentPage = selectedPage;
+      this.getProducts();
+    },
     editProduct: function (product) {
       this.currentProduct = product;
       this.showSuccess = false;
     },
     deleteProduct: async function (product) {
-      this.fetchOrder(); 
+      this.fetchOrder();
       await axios.delete("api/products/" + product.id).then((response) => {
         this.showSuccess = true;
         this.successMessage = "Product Deleted";
@@ -80,34 +98,41 @@ export default {
       this.currentProduct = null;
     },
     getProducts: function () {
-      axios.get("api/products").then((response) => {
-        this.products = response.data.data;
-      }).then((response) => {
-        this.$store.commit('setProductList',this.products);
-      })
+      axios
+        .get("api/products?page=" + this.currentPage)
+        .then((response) => {
+          this.products = response.data.data;
+          this.getTotalProducts;
+        })
+        .then((response) => {
+          this.$store.commit("setProductList", this.products);
+        });
     },
-    getOrders: async function(){
+    getOrders: async function () {
       await axios.get("api/order_items").then((response) => {
         this.orders = response.data.data;
         //console.log(this.orders);
       });
     },
-    fetchOrder: function(){
+    fetchOrder: function () {
       this.getOrders();
-      this.orders.forEach(element => {
-        console.log("Teste"+element);
-      });      
+      this.orders.forEach((element) => {
+        console.log("Teste" + element);
+      });
     },
-    addToCart: function(product){
+    addToCart: function (product) {
       //this.currentProduct = product;
       this.cart.push(product);
       console.log(this.cart);
-    }
+    },
   },
   mounted() {
     this.getProducts();
-    console.log(this.currentUser)
+    //console.log(this.currentUser);
   },
 };
 </script>
 
+<style lang="scss">
+@import "../styles/sliding-pagination";
+</style>

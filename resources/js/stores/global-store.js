@@ -76,6 +76,7 @@ export default new Vuex.Store({
 		currentUser: null,
 		shoppingCart: [],
 		fetchedUser: null,
+		totalProduts: null,
 	},
 	mutations: {
 		getShoppingCart(state) {
@@ -85,6 +86,7 @@ export default new Vuex.Store({
 				state.shoppingCart = [];
 			}
 		},
+		
 		clearProductList(state) {
 			state.productList = []
 		},
@@ -186,6 +188,12 @@ export default new Vuex.Store({
 		getUsers: state=>{
 			console.log(state.users)
 			return state.users
+		},
+		getTotalProducts: state=>{
+			axios.get("api/products").then((response)=>{
+				state.totalProduts= response.data.data.length;
+			})
+			return state.totalProduts
 		}
 
 	},

@@ -52,6 +52,7 @@
 </template>
 
 <script>
+import SlidingPagination from 'vue-sliding-pagination';
 import LayoutComponent from "./components/layout";
 import ProductComponent from "./components/product";
 import OrderComponent from "./components/orders/order";
