@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Resources\User;
 
+
 class AuthController extends Controller{
 
 	public function login(Request $request)
@@ -32,8 +33,8 @@ class AuthController extends Controller{
         address: "",
         phone: "",
         nif: "",*/
-        
-        $credentials = $request->only('name','email', 'password','photo_url','address','phone','nif');
+        //$credentials = $request->only('name','email', 'password','photo_url','address','phone','nif');
+        $credentials = $request->only('name','email', 'password','photo_url');
         if(Auth::attempt($credentials)){
             Auth::validate();
         }

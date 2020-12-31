@@ -75,5 +75,6 @@ Route::get('order',                    [OrderController::class, 'index']);
 Route::get('order/{order}',          [OrderController::class, 'show']);
 
 Route::post('order',                   [OrderController::class, 'store']);
+Route::put('order',          [OrderController::class, 'update']);
 Route::put('order/{order}',          [OrderController::class, 'update']);
 Route::delete('order/{order}',       [OrderController::class, 'destroy']);

@@ -32,4 +32,10 @@ class OrderController extends Controller
         $order->save();
         return response()->json(new OrderResource($order), 201);	
     }
+
+    public function update(UpdateOrderRequest $request, Order $order)
+    {
+        $order->update($request->validated());
+        return response()->json(new OrderResource($order), 201);
+    }
 }
