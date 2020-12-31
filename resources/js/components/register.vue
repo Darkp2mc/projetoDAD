@@ -37,6 +37,7 @@
         value=""
       />
     </div>
+    <!--
     <div class="form-group">
       <label for="inputAddress">Address</label>
       <input
@@ -44,7 +45,7 @@
         class="form-control"
         v-model="credentials.address"
         name="address"
-        id="inputEmail"
+        id="inputAddress"
         placeholder="Address"
         value=""
       />
@@ -73,16 +74,16 @@
         value=""
       />
     </div>
+    -->
     <div class="form-group">
-      <label for="inputPhoto">Photo (Optional)</label>
-      <input
-        type="photo"
-        class="form-control"
-        v-model="credentials.photo_url"
-        name="photo"
-        id="inputPhoto"
-      />
-    </div>
+          <label for="inputPhoto">Photo</label>
+          <input
+            type="file"
+            accept="image/*"
+            @change="uploadImage($event)"
+            id="file-input"
+          />
+        </div>
     <div class="form-group">
       <a class="btn btn-default" v-on:click.prevent="register()">Confirm</a>
       <a class="btn btn-default" v-on:click.prevent="cancel()">Cancel</a>
@@ -102,9 +103,9 @@ export default {
         email: "",
         password: "",
         photo_url: "",
-        address: "",
-        phone: "",
-        nif: "",
+        //address: "",
+        //phone: "",
+        //nif: "",
       },
       failedMessage: "",
       logged: false,
@@ -122,6 +123,7 @@ export default {
         axios
           .post("/api/register", this.credentials)
           .then((response) => {
+            
             console.log(this.credentials);
             /*console.log("User has logged in");
             this.$router.push("/products");
@@ -134,6 +136,23 @@ export default {
 			    this.failedMessage = "Registration failed";
 			}
           });
+      });
+    },
+    uploadImage(event) {
+      const URL = "api/users/" + getCurrentUser.id;
+
+      let data = new FormData();
+      data.append(getCurrentUser, "photo_url");
+      data.append("file", event.target.files[0]);
+
+      let config = {
+        header: {
+          "Content-Type": "image/png",
+        },
+      };
+
+      axios.put(URL, data, config).then((response) => {
+        console.log("image upload response > ", response);
       });
     },
   },

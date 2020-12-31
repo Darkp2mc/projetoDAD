@@ -34,6 +34,12 @@
                         <li class="nav-item " v-if="logged">
                             <router-link to="/orders" class="nav-link" active-class="active">Orders</router-link>
                         </li>
+                        <li class="nav-item " v-if="logged && currentUser.type=='EC'">
+                            <router-link to="/cook" class="nav-link" active-class="active">Dashboard</router-link>
+                        </li>
+                        <li class="nav-item " v-if="logged && currentUser.type=='ED'">
+                            <router-link to="/deliveryman" class="nav-link" active-class="active">Dashboard</router-link>
+                        </li>
                     </ul>
                 </div>
                 

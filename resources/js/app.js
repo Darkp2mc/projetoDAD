@@ -21,6 +21,7 @@ import MyselfComponent from './components/myself.vue'
 import RegisterComponent from './components/register'
 import MyselfEditComponent from './components/myselfEdit.vue'
 import CookComponent from './components/dashboards/cook.vue'
+import DeliveryManComponent from './components/dashboards/deliveryman.vue'
 
 import store from "./stores/global-store"
 
@@ -36,6 +37,7 @@ const routes = [
 	{ path: '/register', component: RegisterComponent },
 	{ path: '/edit_profile', component: MyselfEditComponent },
 	{ path: '/cook', component: CookComponent},
+	{ path: '/deliveryman', component: DeliveryManComponent},
 	{ path: '*', redirect: '/welcome' }
 ]
 

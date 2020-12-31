@@ -40,7 +40,7 @@
           <td>{{ currentOrder.opened_at }}</td>
           <td>{{ currentOrder.updated_at }}</td>
           <td>{{ currentOrder.notes }}</td>
-          <button class="btn btn-success">Ready</button>
+          <button class="btn btn-success" v-on:click="finishOrder">Ready</button>
         </tbody>
         <th>Items in order</th>
         <tr>
@@ -153,6 +153,25 @@ export default {
         this.orderUser = response.data.data;
       });
     },
+    finishOrder: function () {
+      this.getCurrentUser;
+      this.currentOrder.status = "R";
+      this.currentOrder.prepared_by = this.currentUser.id;
+
+      axios.get("api/order/"+this.currentOrder.id).then(response=>{
+        console.log(response)
+      })
+      axios
+        .put("/api/order/" + this.currentOrder.id, this.currentOrder)
+        .then((response) => {
+          console.log(this.currentOrder)
+          console.log(response);
+          //Object.assign(this.currentOrder, response.data.data)
+        });
+      //this.currentOrder = null;
+      this.$forceUpdate();
+    },
+
     /*
     filterOrder: function () {
       this.getCurrentUser;
