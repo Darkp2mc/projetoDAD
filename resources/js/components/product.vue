@@ -16,6 +16,7 @@
     ></product-edit>
 
     <sliding-pagination
+      v-if="!isFiltering"
       :current="currentPage"
       :total="totalPages"
       @page-change="pageChangeHandler"
@@ -58,14 +59,29 @@ export default {
       cart: [],
       currentPage: 1,
       totalPages: 10,
+      isFiltering: false,
     };
   },
-  computed:{
+  computed: {
     getTotalProducts() {
-      this.totalPages = parseInt(this.$store.getters.getTotalProducts/5+1);
+      this.totalPages = parseInt(this.$store.getters.getTotalProducts / 5 + 1);
     },
   },
   methods: {
+    filter(){
+      this.getProductsFilter();
+      console.log(this.products)
+    },
+    getProductsFilter(){
+      axios
+        .get("api/products")
+        .then((response) => {
+          this.products = response.data.data;
+        })
+        .then((response) => {
+          this.$store.commit("setProductList", this.products);
+        });
+    },
     pageChangeHandler(selectedPage) {
       this.currentPage = selectedPage;
       this.getProducts();

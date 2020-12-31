@@ -188,6 +188,7 @@ export default {
       return false;
     },
     search: function () {
+      this.$emit("filter");
       this.productsList = [...this.products];
       this.filterType();
       if (this.productNameSearch != null) {
