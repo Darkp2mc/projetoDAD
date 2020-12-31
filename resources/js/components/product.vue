@@ -9,12 +9,14 @@
 
     <product-edit
       v-if="currentProduct"
+      :currentUser="currentUser"
       :product="currentProduct"
       @product-saved="saveProduct"
       @product-canceled="cancelEdit"
     ></product-edit>
 
     <product-list
+      :currentUser="currentUser"
       :products="products"
       :selected-product="currentProduct"
       @edit-click="editProduct"
@@ -33,6 +35,7 @@ export default {
     "product-list": ProductListComponent,
     "product-edit": ProductEditComponent,
   },
+  props: ["currentUser"],
   data: function () {
     return {
       title: "List Products",
@@ -103,6 +106,7 @@ export default {
   },
   mounted() {
     this.getProducts();
+    console.log(this.currentUser)
   },
 };
 </script>

@@ -25,18 +25,19 @@ import CookComponent from './components/dashboards/cook.vue'
 import store from "./stores/global-store"
 
 const routes = [
-	{ path: '/', redirect: '/welcome' },
-	{ path: '/login', name: "login", component: LoginComponent },
-	{ path: '/products', component: ProductComponent },
-	{ path: '/orders', component: OrderComponent },
-	{ path: '/welcome', component: WelcomeComponent },
-	{ path: '/cart', component: CartComponent },
-	{ path: '/users', component: UserComponent },
-	{ path: '/myself', component: MyselfComponent },
-	{ path: '/register', component: RegisterComponent },
-	{ path: '/edit_profile', component: MyselfEditComponent },
+	{ path: '/', redirect: '/welcome' , props: true},
+	{ path: '/login', name: "login", component: LoginComponent , props: true},
+	{ path: '/products', component: ProductComponent, props: true},
+	{ path: '/orders', component: OrderComponent , props: true},
+	{ path: '/welcome', component: WelcomeComponent , props: true},
+	{ path: '/cart', component: CartComponent , props: true},
+	{ path: '/users', component: UserComponent , props: true},
+	{ path: '/myself', component: MyselfComponent , props: true},
+	{ path: '/register', component: RegisterComponent , props: true},
+	{ path: '/edit_profile', component: MyselfEditComponent , props: true},
 	{ path: '/cook', component: CookComponent},
 	{ path: '*', redirect: '/welcome' }
+
 ]
 
 const router = new VueRouter({

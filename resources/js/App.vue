@@ -40,7 +40,7 @@
             </div>
         </nav>
     </div>
-    <router-view @loginNav="loginNav">:currentUser="currentUser"</router-view>
+    <router-view @loginNav="loginNav" :currentUser="currentUser"></router-view>
     <hr />
   </div>
 </template>

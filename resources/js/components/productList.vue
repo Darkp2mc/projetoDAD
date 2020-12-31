@@ -5,7 +5,7 @@
       <router-link
         class="h2"
         v-if="
-          this.$store.state.logged == true && this.$store.state.currentUser.type == 'EC'
+          this.$store.state.logged == true && this.currentUser.type == 'EC'
         "
         to="/cook"
         >Cook Dashboard</router-link
@@ -23,17 +23,12 @@
         >
           <img
             style="width: 15%; border-radius: 50%"
-            :src="'storage/fotos/' + this.$store.state.currentUser.photo_url"
+            :src="'storage/fotos/' + this.currentUser.photo_url"
           />
-          {{ this.$store.state.currentUser.name }}
-          
+          {{ this.currentUser.name }}
         </h3>
-        
-        <a href="#/products" v-on:click.prevent="logout">Logout</a> -
-        <router-link to="/myself">Myself</router-link>
+
       </div>
-      <router-link to="/cart" v-if="this.$store.state.logged == true">Cart - </router-link>
-      <router-link to="/orders" v-if="this.$store.state.logged == true">Orders</router-link>
       <hr />
       <div class="form-group">
         <label for="department_id">Type:</label>
@@ -113,12 +108,11 @@
 
 <script>
 export default {
-  props: ["products", "selectedProduct", "user"],
+  props: ["products", "selectedProduct", "currentUser"],
   data: function () {
     return {
       editingProduct: null,
       logged: null,
-      currentUser: null,
       productNameSearch: null,
       selectedType: null,
       types: [
@@ -165,20 +159,6 @@ export default {
     },
     removeFromCart: function (product) {
       this.$emit("remove-click", product);
-    },
-    myself() {
-      axios
-        .get("/api/users/me")
-        .then((response) => {
-          console.log("User currently logged:");
-          this.currentUser = response.data;
-          this.logged = true;
-          console.dir(response.data);
-        })
-        .catch((error) => {
-          console.log("Invalid Request");
-          return false;
-        });
     },
     logout: async function () {
       await axios
@@ -245,10 +225,6 @@ export default {
     },
   },
   computed: {
-    getCurrentUser() {
-      return this.$store.getters.getCurrentUser;
-      this.currentUser = this.$store.getters.getCurrentUser;
-    },
   },
 
   mounted: async function () {
@@ -261,7 +237,6 @@ export default {
         this.logged = true;
         this.$store.commit("setCurrentUser", response.data);
         this.$store.state.logged = true;
-        this.currentUser = response.data;
       })
       .catch((error) => {
         console.log(error);
