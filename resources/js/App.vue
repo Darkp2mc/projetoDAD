@@ -26,7 +26,7 @@
                             <router-link to="/" class="nav-link" active-class="active" v-on:click.native="logout">Logout</router-link>
                         </li>
                         <li class="nav-item " v-if="logged">
-                            <router-link to="/" class="nav-link" active-class="active">Products</router-link>
+                            <router-link to="/products" class="nav-link" active-class="active">Products</router-link>
                         </li>
                         <li class="nav-item " v-if="logged">
                             <router-link to="/cart" class="nav-link" active-class="active">Cart</router-link>
@@ -40,7 +40,7 @@
             </div>
         </nav>
     </div>
-    <router-view @loginNav="loginNav"></router-view>
+    <router-view @loginNav="loginNav">:currentUser="currentUser"</router-view>
     <hr />
   </div>
 </template>
@@ -66,10 +66,16 @@ export default {
   data: function(){
       return {
           logged: false,
+          currentUser: null,
       };
   },
   mounted () {
       this.myself();
+  },
+  watch:{
+    logged: function () {
+      this.myself();
+    }
   },
   methods: {
     logout: function () {
@@ -86,8 +92,8 @@ export default {
         .get("/api/users/me")
         .then((response) => {
           console.log("User currently logged:");
+          this.currentUser = response.data;
           this.logged = true;
-          console.dir(response.data);
         })
         .catch((error) => {
           console.log("Invalid Request");
