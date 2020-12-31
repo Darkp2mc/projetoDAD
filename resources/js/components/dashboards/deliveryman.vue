@@ -1,21 +1,5 @@
 <template>
   <div class="jumbotron">
-    <div class="dropdown pull-left">
-      <button
-        class="btn btn-secondary dropdown-toggle"
-        type="button"
-        id="dropdownMenuButton"
-        data-toggle="dropdown"
-        aria-haspopup="true"
-        aria-expanded="false"
-      >
-        Options
-      </button>
-      <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <a class="dropdown-item" href="#/products">Products</a>
-        <a class="dropdown-item" href="#/welcome">Logout</a>
-      </div>
-    </div>
     <br />
     <br />
     <h1>Deliveryman Dashboard</h1>
