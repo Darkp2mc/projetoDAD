@@ -3,6 +3,12 @@
     <h1 style="text-align: center; margin-top: 20px; margin-bottom: auto; font-size:50px;">
       {{ title }}
     </h1>
+    <router-link to="/products" active-class="active">Products</router-link> -
+    <router-link v-if="this.logged != true" to="/login">Login</router-link>
+    <div v-if="this.logged == true">
+      <a href="#/products" v-on:click.prevent="logout">Logout</a> -
+      <router-link to="/myself">Myself</router-link>
+    </div>
     <table class="table table-hover" >
       <thead>
         <tr>

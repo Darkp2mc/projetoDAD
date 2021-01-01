@@ -23,7 +23,7 @@
       @page-change="pageChangeHandler"
     ></sliding-pagination>
 
-    <product-list @filter="filter"
+    <product-list
       :currentUser="currentUser"
       :products="products"
       :selected-product="currentProduct"
@@ -74,7 +74,7 @@ export default {
     filter(){
       this.isFiltering = true;
       this.getProductsFilter();
-      this.isFiltering = true;
+      console.log(this.products)
     },
     getProductsFilter(){
       axios
@@ -82,6 +82,9 @@ export default {
         .then((response) => {
           this.products = response.data.data;
         })
+        .then((response) => {
+          this.$store.commit("setProductList", this.products);
+        });
     },
     pageChangeHandler(selectedPage) {
       this.currentPage = selectedPage;

@@ -1,8 +1,35 @@
 <template>
   <div class="jumbotron">
     <div class="table-responsive">
+      <router-link v-if="this.$store.state.logged != true" to="/login">Login</router-link>
+      <router-link
+        class="h2"
+        v-if="
+          this.$store.state.logged == true && this.currentUser.type == 'EC'
+        "
+        to="/cook"
+        >Cook Dashboard</router-link
+      >
+      
+      <div v-if="this.$store.state.logged == true">
+        <h3
+          style="
+            position: absolute;
+            margin-top: 30px;
+            float: right;
+            right: -18px;
+            top: 0px;
+          "
+        >
+          <img
+            style="width: 15%; border-radius: 50%"
+            :src="'storage/fotos/' + this.currentUser.photo_url"
+          />
+          {{ this.currentUser.name }}
+        </h3>
 
       </div>
+      <hr />
       <div class="form-group">
         <label for="department_id">Type:</label>
         <select class="form-control" v-model="selectedType">
@@ -164,7 +191,6 @@ export default {
       this.$emit("filter");
       this.productsList = [...this.products];
       this.filterType();
-      console.log(this.productsList)
       if (this.productNameSearch != null) {
         for (var i = this.productsList.length - 1; i >= 0; i--) {
           if (

@@ -2,14 +2,6 @@
   <div id="menuOptions" class="index">
     <div>
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div v-if="this.$store.state.logged == true">
-                <img
-                  style="width: 15%; border-radius: 50%"
-                  :src="'storage/fotos/' + this.currentUser.photo_url"
-                />
-                {{ this.currentUser.name }}
-              </h3>
-            </div>
             <div class="container">
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -36,10 +28,10 @@
                         <li class="nav-item " v-if="logged">
                             <router-link to="/products" class="nav-link" active-class="active">Products</router-link>
                         </li>
-                        <li class="nav-item " v-if="logged && currentUser.type=='C'">
+                        <li class="nav-item " v-if="logged">
                             <router-link to="/cart" class="nav-link" active-class="active">Cart</router-link>
                         </li>
-                        <li class="nav-item " v-if="logged && currentUser.type=='C'">
+                        <li class="nav-item " v-if="logged">
                             <router-link to="/orders" class="nav-link" active-class="active">Orders</router-link>
                         </li>
                         <li class="nav-item " v-if="logged && currentUser.type=='EC'">
