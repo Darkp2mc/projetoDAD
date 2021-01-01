@@ -25,8 +25,28 @@
         value=""
       />
     </div>
+    <div class="form-group">
+      <label for="inputType">Type</label>
+      <input
+        type="text"
+        class="form-control"
+        v-model="user.type"
+        name="type"
+        id="inputType"
+        placeholder="Type"
+        value=""
+      />
+    </div>
     
     <div class="form-group">
+      <a
+        class="btn btn-danger"
+        v-on:click.prevent="blockUser()"
+      >Block</a>
+      <a
+        class="btn btn-primary"
+        v-on:click.prevent="unblockUser()"
+      >Unblock</a>
       <a
         class="btn btn-default"
         v-on:click.prevent="saveUser()"
@@ -60,6 +80,12 @@ export default {
           Object.assign(this.user, response.data.data)
           this.$emit('user-canceled', this.user)
         })
+    },
+    blockUser: function(){
+
+    },
+    unblockUser: function(){
+
     }
   }
 }

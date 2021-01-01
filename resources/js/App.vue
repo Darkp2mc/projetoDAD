@@ -40,6 +40,9 @@
                         <li class="nav-item " v-if="logged && currentUser.type=='ED'">
                             <router-link to="/deliveryman" class="nav-link" active-class="active">Dashboard</router-link>
                         </li>
+                        <li class="nav-item " v-if="logged && currentUser.type=='EM'">
+                            <router-link to="/users" class="nav-link" active-class="active">Dashboard</router-link>
+                        </li>
                     </ul>
                 </div>
                 

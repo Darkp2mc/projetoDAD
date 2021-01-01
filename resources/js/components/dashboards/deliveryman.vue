@@ -153,18 +153,20 @@ export default {
         this.orderUser = response.data.data;
       });
     },
-    finishOrder: function () {
+    finishOrder: async function () {
+      var currentdate = new Date();
       this.getCurrentUser;
       this.currentOrder.status = "D";
       this.currentOrder.delivered_by = this.currentUser.id;
-      
-      axios
+      this.currentOrder.current_status_at = currentdate.getFullYear()+'-'+currentdate.getMonth()+'-'+currentdate.getDate()+' '+currentdate.getHours()+":"+currentdate.getMinutes()+":"+currentdate.getSeconds();
+
+      await axios
         .put("/api/order/" + this.currentOrder.id, this.currentOrder)
         .then((response) => {
-          console.log(response);
-          //Object.assign(this.currentOrder, response.data.data)
+          //console.log(response);
+          Object.assign(this.currentOrder, response.data.data)
         });
-      //this.currentOrder = null;
+      this.currentOrder = null;
       this.$forceUpdate();
     },
 

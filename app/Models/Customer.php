@@ -19,7 +19,6 @@ class Customer extends Model
         'address',
         'phone',
         'nif',
-        
     ];
 
 

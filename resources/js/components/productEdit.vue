@@ -64,9 +64,11 @@ export default {
     saveProduct: function () {
       axios.put('api/products/' + this.product.id, this.product)
         .then(response => {
+          console.log(response)
           Object.assign(this.product, response.data.data)
           this.$emit('product-saved', this.product)
           alert("Product saved");
+          console.log(response)
         })
     },
     

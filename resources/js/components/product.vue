@@ -1,5 +1,6 @@
 <template>
   <div>
+    
     <div class="alert alert-success" v-if="showSuccess">
       <button type="button" class="close-btn" v-on:click="showSuccess = false">
         &times;
@@ -26,10 +27,12 @@
       :currentUser="currentUser"
       :products="products"
       :selected-product="currentProduct"
+      @filter="filter"
       @edit-click="editProduct"
       @delete-click="deleteProduct"
       @add-click="addToCart"
     ></product-list>
+
   </div>
 </template>
 
@@ -64,11 +67,12 @@ export default {
   },
   computed: {
     getTotalProducts() {
-      this.totalPages = parseInt(this.$store.getters.getTotalProducts / 5 + 1);
+      this.totalPages = parseInt(this.$store.getters.getTotalProducts / 5);
     },
   },
   methods: {
     filter(){
+      this.isFiltering = true;
       this.getProductsFilter();
       console.log(this.products)
     },

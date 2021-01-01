@@ -79,9 +79,10 @@ export default {
       Object.assign(this.currentUser, user)
       this.currentUser = null
     },
-    getUsers: function () {
-      axios.get('api/users')
+    getUsers: async function () {
+      await axios.get('api/users')
         .then(response => { this.users = response.data.data })
+      console.log(this.users)
     },
   },
   mounted () {
