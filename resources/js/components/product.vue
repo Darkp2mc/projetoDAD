@@ -23,7 +23,7 @@
       @page-change="pageChangeHandler"
     ></sliding-pagination>
 
-    <product-list
+    <product-list 
       :currentUser="currentUser"
       :products="products"
       :selected-product="currentProduct"
@@ -82,9 +82,6 @@ export default {
         .then((response) => {
           this.products = response.data.data;
         })
-        .then((response) => {
-          this.$store.commit("setProductList", this.products);
-        });
     },
     pageChangeHandler(selectedPage) {
       this.currentPage = selectedPage;
@@ -153,6 +150,6 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<!-- <style lang="scss">
 @import "../styles/sliding-pagination";
-</style>
+</style> /!-->

@@ -10,23 +10,6 @@
         to="/cook"
         >Cook Dashboard</router-link
       >
-      
-      <div v-if="this.$store.state.logged == true">
-        <h3
-          style="
-            position: absolute;
-            margin-top: 30px;
-            float: right;
-            right: -18px;
-            top: 0px;
-          "
-        >
-          <img
-            style="width: 15%; border-radius: 50%"
-            :src="'storage/fotos/' + this.currentUser.photo_url"
-          />
-          {{ this.currentUser.name }}
-        </h3>
 
       </div>
       <hr />
