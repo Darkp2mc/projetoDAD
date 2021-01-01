@@ -155,12 +155,32 @@ export default new Vuex.Store({
 			}
 			localStorage.setItem('shoppingCart', JSON.stringify(state.shoppingCart));
 		},
-
 		removeItemFromCart(state, data) {
 			state.shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'));
 			for (var i = state.shoppingCart.length - 1; i >= 0; i--) {
 				if (state.shoppingCart[i].currentUserId = data.currentUserId) {
 					state.shoppingCart[i].orderItem.splice(data.id, 1);
+					break;
+				}
+			}
+			localStorage.setItem('shoppingCart', JSON.stringify(state.shoppingCart));
+		},
+		removeItemFromCartProducts(state, data) {
+			state.shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'));
+			for (var i = state.shoppingCart.length - 1; i >= 0; i--) {
+				if (state.shoppingCart[i].currentUserId = data.currentUserId) {
+					for (var k = state.shoppingCart[i].orderItem.length - 1; k >= 0; k--) {
+						if (state.shoppingCart[i].orderItem[k].product.id == data.productId) {
+							state.shoppingCart[i].total -= state.shoppingCart[i].orderItem[k].product.price;
+							state.shoppingCart[i].orderItem[k].quantity--;
+							if (state.shoppingCart[i].orderItem[k].quantity == 0) {
+								state.shoppingCart[i].orderItem.splice(k, 1);
+							}
+							else {
+								state.shoppingCart[i].orderItem[k].subTotal -= state.shoppingCart[i].orderItem[k].product.price;
+							}
+						}
+					}
 					break;
 				}
 			}

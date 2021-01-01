@@ -10,23 +10,6 @@
         to="/cook"
         >Cook Dashboard</router-link
       >
-      
-      <div v-if="this.$store.state.logged == true">
-        <h3
-          style="
-            position: absolute;
-            margin-top: 30px;
-            float: right;
-            right: -18px;
-            top: 0px;
-          "
-        >
-          <img
-            style="width: 15%; border-radius: 50%"
-            :src="'storage/fotos/' + this.currentUser.photo_url"
-          />
-          {{ this.currentUser.name }}
-        </h3>
 
       </div>
       <hr />
@@ -78,11 +61,11 @@
             <td>{{ product.description }}</td>
             <td>{{ product.price }}€</td>
             <td>
-              <a class="btn btn-sm btn-success" v-on:click.prevent="addToCart(product)"
+              <a class="btn btn-sm btn-success"  v-if="currentUser.type == 'C'" v-on:click.prevent="addToCart(product)"
                 >Adicionar</a
               >
               <a
-                class="btn btn-sm btn-success"
+                class="btn btn-sm btn-success"   v-if="currentUser.type == 'C'"
                 v-on:click.prevent="removeFromCart(product)"
                 >Remover</a
               >
@@ -158,7 +141,14 @@ export default {
       }
     },
     removeFromCart: function (product) {
-      this.$emit("remove-click", product);
+      if (this.currentUser != null) {
+        this.$store.commit("removeItemFromCartProducts", {
+          productId: product.id,
+          currentUserId: this.currentUser.id,
+          
+        });
+        this.$emit("remove-click", product);
+      }
     },
     logout: async function () {
       await axios
