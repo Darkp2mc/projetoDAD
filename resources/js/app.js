@@ -36,8 +36,8 @@ const routes = [
 	{ path: '/myself', component: MyselfComponent , props: true},
 	{ path: '/register', component: RegisterComponent , props: true},
 	{ path: '/edit_profile', component: MyselfEditComponent , props: true},
-	{ path: '/cook', component: CookComponent},
-	{ path: '/deliveryman', component: DeliveryManComponent},
+	{ path: '/cook', component: CookComponent, props: true},
+	{ path: '/deliveryman', component: DeliveryManComponent, props: true},
 	{ path: '*', redirect: '/welcome' }
 
 ]
