@@ -26,8 +26,10 @@ class UpdateUserRequest extends FormRequest
         return [
             'name' => 'required|regex:/^[A-Za-záàâãéèêíóôõúçÁÀÂÃÉÈÍÓÔÕÚÇ ]+$/',
             'email' => 'required|email|unique:users,email,' . $this->user->id,
-            'password' => 'required|string|min:6|confirmed',
-            'type'=> 'required|[C,EC,ED,EM]',
+            'password' => 'sometimes|string|min:6|confirmed',
+            'type'=> 'required',
+            'blocked'=>'sometimes',
+            'logged_at'=>'nullable'
         ];
     }
 }

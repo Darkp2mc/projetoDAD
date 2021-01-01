@@ -96,6 +96,11 @@ export default new Vuex.Store({
 		setCurrentUser(state, currentUser) {
 			state.currentUser = currentUser
 		},
+		setUserLoggedAtToNull(state){
+			console.log(state.currentUser.logged_at)
+			state.currentUser.logged_at = Date.parse(0)
+			console.log(state.currentUser.logged_at)
+		},
 		setFetchedUser(state, user){
 			state.fetchedUser = user; 
 		},

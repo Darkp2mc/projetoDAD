@@ -72,7 +72,7 @@ class UserController extends Controller
     public function update(UpdateUserRequest $request, User $user)
     {
         $user->update($request->validated());
-        return new UserResource($user);
+        return response()->json(new UserResource($user),201);
     }
     /* SEM UpdateUserRequest */
     // public function update(Request $request, $id)

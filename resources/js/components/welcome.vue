@@ -2,26 +2,27 @@
   <div class="center">
     <h1>Food Home</h1>
 
-    <div class="btnProductsLogged" v-if="this.logged != false" v-on:click="products">Products</div>
-    <div class="btnProducts" v-if="this.logged == false" v-on:click="products">Products</div>
+    <div class="btnProductsLogged" v-if="this.logged != false" v-on:click="products">
+      Products
+    </div>
+    <div class="btnProducts" v-if="this.logged == false" v-on:click="products">
+      Products
+    </div>
 
     <div
       class="btnLogout"
       v-if="this.logged != false"
       href="#/welcome"
-      v-on:click.prevent="
-        logout();
-        reloadPage();
-      "
+      v-on:click.prevent="logout()"
     >
       Logout
     </div>
+    <!-- reloadPage(); -->
     <div class="btnLogin" v-if="this.logged == false" v-on:click="login">Login</div>
     <div v-if="this.logged == false">
       <h2>Don't have an account?</h2>
       <div class="btnRegister" v-on:click="register">Register</div>
-      <div class="debug" style="user-select: none;
-  pointer-events: none;">⠀⠀⠀⠀⠀⠀</div>
+      <div class="debug" style="user-select: none; pointer-events: none">⠀⠀⠀⠀⠀⠀</div>
     </div>
     <p v-if="this.logged != false" id="text" class="welcomeText">
       Welcome back {{ $store.state.currentUser.name }}!
@@ -64,6 +65,11 @@ export default {
       welcomePage: true,
     };
   },
+  computed: {
+    getCurrentUser() {
+      return this.$store.getters.getCurrentUser;
+    },
+  },
   methods: {
     reloadPage() {
       window.location.reload();
@@ -72,23 +78,33 @@ export default {
       await axios
         .post("/api/logout")
         .then((response) => {
-          this.$store.state.logged = false
-          this.$store.commit("setCurrentUser", "");
-          this.logged = false;
-          console.log("User has logged out");
+          //console.log(this.getCurrentUser)
+          console.log(this.getCurrentUser.logged_at);
+          this.getCurrentUser.logged_at = null;
+          //console.log(this.getCurrentUser.logged_at);
+          //this.$store.commit("setUserLoggedAtToNull");
+          //console.log("User has logged out");
         })
         .catch((error) => {
           console.log("Invalid Logout");
         });
-        await reloadPage();
+      await axios
+        .put("api/users/" + this.getCurrentUser.id, this.getCurrentUser)
+        .then((response) => {
+          console.log(response);
+        });
+      this.$store.state.logged = false;
+      this.$store.commit("setCurrentUser", "");
+      this.logged = false;
+      //await reloadPage();
     },
-    register: function(){
+    register: function () {
       this.$router.push("/register");
     },
-    login: function(){
+    login: function () {
       this.$router.push("/login");
     },
-    products: function(){
+    products: function () {
       this.$router.push("/products");
     },
   },
@@ -112,7 +128,6 @@ export default {
 </script>
 
 <style>
-
 body {
   background-color: #10151b;
   background: url("./restaurante/restaurante.jpg");
@@ -316,7 +331,6 @@ h2 {
   background: #ffffff;
   color: #10151b;
 }
-
 
 .btnRegister {
   position: absolute;

@@ -60,10 +60,14 @@ export default {
               this.logout()
             }
             else{
+              var currentdate = new Date();
+              response.data.logged_at = currentdate.getFullYear()+'-'+currentdate.getMonth()+'-'+currentdate.getDate()+' '+currentdate.getHours()+":"+currentdate.getMinutes()+":"+currentdate.getSeconds();
+              //console.log(response.data)
               this.$emit('loginNav', true);
               this.$router.push("/products");
-              this.$store.commit('setCurrentUser',this.response.data);
+              this.$store.commit('setCurrentUser',response.data);
               this.$store.state.logged = true
+              axios.put("api/users/"+response.data.id, response.data);
             }
           })
           .catch((error) => {

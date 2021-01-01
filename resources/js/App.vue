@@ -10,7 +10,9 @@
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-
+                      <li class="nav-item" v-if="logged">
+                            <router-link to="" class="nav-link" active-class="active">Logged as {{ currentUser.name }}</router-link>
+                        </li>
                     </ul>
 
                     <!-- Right Side Of Navbar -->

@@ -30,13 +30,13 @@
             <a
               class="btn btn-xs btn-primary"
               v-if="user.blocked == 1"
-              v-on:click.prevent="unblockUser()"
+              v-on:click.prevent="unblockUser(user)"
               >Unblock
             </a>
             <a
-              class="btn btn-xs btn-primary"
+              class="btn btn-xs btn-warning"
               v-if="user.blocked == 0"
-              v-on:click.prevent="blockUser()"
+              v-on:click.prevent="blockUser(user)"
               >Block
             </a>
             <a class="btn btn-xs btn-primary" v-on:click.prevent="editUser(user)">Edit</a>
@@ -75,8 +75,34 @@ export default {
     onImgError() {
       this.imgError = true;
     },
-    blockUser: function () {},
-    unblockUser: function () {},
+    logout: async function (user) {
+      await axios
+        .post("/api/logout/"+user.id)
+        .then((response) => {
+          this.$store.state.logged = false
+          this.$store.commit("setCurrentUser", "");
+          //console.log("User has logged out");
+        })
+        .catch((error) => {
+          console.log("Invalid Logout");
+        });
+        await this.$router.push("/welcome");
+    },
+    blockUser: async function (user) {
+      user.blocked=1;
+      await axios.put("api/users/"+user.id,user).then(response=>{
+        Object.assign(user,response.data.data);
+        console.log(response);
+       
+      })
+    },
+    unblockUser: async function (user) {
+      user.blocked=0;
+      await axios.put("api/users/"+user.id,user).then(response=>{
+        Object.assign(user,response.data.data);
+        console.log(response);
+      })
+    },
   },
 };
 </script>
