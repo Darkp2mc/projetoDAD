@@ -24,7 +24,20 @@
           <td>{{ currentOrder.opened_at }}</td>
           <td>{{ currentOrder.updated_at }}</td>
           <td>{{ currentOrder.notes }}</td>
-          <button class="btn btn-success" v-on:click="finishOrder">Ready</button>
+          <button
+            class="btn btn-success"
+            v-if="currentOrder.status == 'R'"
+            v-on:click.prevent="changeOrderStatus('T')"
+          >
+            Deliver Order
+          </button>
+          <button
+            class="btn btn-success"
+            v-if="currentOrder.status == 'T'"
+            v-on:click.prevent="changeOrderStatus('D')"
+          >
+            Order Ready
+          </button>
         </tbody>
         <th>Items in order</th>
         <tr>
@@ -96,6 +109,12 @@ export default {
         .then((response) => {
           this.ordersList = response.data.data;
           for (var i = 0; i < this.ordersList.length; i++) {
+            if (this.ordersList[i].status == "T") {
+              this.currentOrder = this.ordersList[i];
+              break;
+            }
+          }
+          for (var i = 0; i < this.ordersList.length; i++) {
             if (this.ordersList[i].status == "R") {
               this.currentOrder = this.ordersList[i];
               break;
@@ -109,6 +128,7 @@ export default {
       await this.getItemInfo();
       await this.getCostumerInfo();
     },
+
     getOrderItems: async function () {
       await axios.get("api/order_items").then((response) => {
         this.orderItemsList = response.data.data;
@@ -137,24 +157,52 @@ export default {
         this.orderUser = response.data.data;
       });
     },
-    finishOrder: async function () {
+    changeOrderStatus: async function (status) {
       var currentdate = new Date();
       this.getCurrentUser;
-      this.currentOrder.status = "D";
+      this.currentOrder.status = status;
       this.currentOrder.delivered_by = this.currentUser.id;
-      this.currentOrder.current_status_at = currentdate.getFullYear()+'-'+currentdate.getMonth()+'-'+currentdate.getDate()+' '+currentdate.getHours()+":"+currentdate.getMinutes()+":"+currentdate.getSeconds();
+      this.currentOrder.current_status_at =
+        currentdate.getFullYear() +
+        "-" +
+        currentdate.getMonth() +
+        "-" +
+        currentdate.getDate() +
+        " " +
+        currentdate.getHours() +
+        ":" +
+        currentdate.getMinutes() +
+        ":" +
+        currentdate.getSeconds();
 
       await axios
         .put("/api/order/" + this.currentOrder.id, this.currentOrder)
         .then((response) => {
           //console.log(response);
-          Object.assign(this.currentOrder, response.data.data)
+          Object.assign(this.currentOrder, response.data.data);
         });
-      this.currentOrder = null;
+      if (status == "D") {
+        this.currentOrder = null;
+        this.currentUser.available_at =
+          currentdate.getFullYear() +
+          "-" +
+          currentdate.getMonth() +
+          "-" +
+          currentdate.getDate() +
+          " " +
+          currentdate.getHours() +
+          ":" +
+          currentdate.getMinutes() +
+          ":" +
+          currentdate.getSeconds();
+        await axios.put("api/users/" + this.getCurrentUser.id, this.getCurrentUser);
+      } else {
+        this.currentUser.available_at = null;
+        await axios.put("api/users/" + this.getCurrentUser.id, this.getCurrentUser);
+      }
       this.$forceUpdate();
-    },
 
-    /*
+      /*
     filterOrder: function () {
       this.getCurrentUser;
       for (var i = this.ordersList.length - 1; i >= 0; i--) {
@@ -164,6 +212,7 @@ export default {
       }
     },
     */
+    },
   },
   mounted: function () {
     this.getOrders();

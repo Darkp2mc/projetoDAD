@@ -25,7 +25,9 @@ class Order extends Model
         'unit_price',
         'preparation_time',
         'delivery_time',
-        'total_time'
+        'total_time',
+        'closed_at',
+        'created_at'
         
     ];
 
@@ -37,6 +39,11 @@ class Order extends Model
 
     protected $casts = [
         'current_status_at'=>'datetime',
+        'opened_at'=>'datetime',
+        'closed_at'=>'datetime',
+        'opened_at'=>'datetime',
+        'created_at'=>'datetime',
+        'date'=>'datetime'
     ];
 
 

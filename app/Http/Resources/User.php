@@ -22,6 +22,7 @@ class User extends JsonResource
             'blocked'           => $this->blocked,
             'photo_url'         => $this->photo_url,
             'logged_at'         => $this->logged_at,
+            'available_at'      => $this->available_at,
             'email_verified_at' => $this->email_verified_at->toDateTimeString(),
             'created_at'        => $this->created_at->toDateTimeString(),
             'updated_at'        => $this->updated_at->toDateTimeString(),

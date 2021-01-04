@@ -40,7 +40,7 @@ export default {
   },
   data: function () {
     return {
-      title: 'List Users',
+      title: 'Manager Dashboard',
       showSuccess: false,
       showFailure: false,
       successMessage: '',
@@ -92,3 +92,14 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+  h1 {
+  font-size: 50px;
+  text-align: center;
+  margin-bottom: 0%;
+}
+h1:hover {
+  font-size: 53px;
+}
+</style>

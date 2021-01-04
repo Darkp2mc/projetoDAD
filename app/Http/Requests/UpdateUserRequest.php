@@ -29,7 +29,8 @@ class UpdateUserRequest extends FormRequest
             'password' => 'sometimes|string|min:6|confirmed',
             'type'=> 'required',
             'blocked'=>'sometimes',
-            'logged_at'=>'nullable'
+            'logged_at'=>'nullable',
+            'available_at'=>'nullable'
         ];
     }
 }

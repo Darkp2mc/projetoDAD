@@ -11,7 +11,7 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
                       <li class="nav-item" v-if="logged">
-                            <router-link to="" class="nav-link" active-class="active">Logged as {{ currentUser.name }}</router-link>
+                            <router-link to="" class="nav-link" active-class="active">Logged as {{ currentUser.name }} ({{ currentUser.type }})</router-link>
                         </li>
                     </ul>
 
@@ -35,6 +35,12 @@
                         </li>
                         <li class="nav-item " v-if="logged">
                             <router-link to="/orders" class="nav-link" active-class="active">Orders</router-link>
+                        </li>
+                        <li class="nav-item " v-if="logged">
+                            <router-link to="/myself" class="nav-link" active-class="active">Profile</router-link>
+                        </li>
+                        <li class="nav-item " v-if="logged">
+                            <router-link to="/chat" class="nav-link" active-class="active">Chat</router-link>
                         </li>
                         <li class="nav-item " v-if="logged && currentUser.type=='EC'">
                             <router-link to="/cook" class="nav-link" active-class="active">Dashboard</router-link>
@@ -66,6 +72,8 @@ import UserComponent from "./components/user";
 import CartComponent from "./components/cart";
 import RegisterComponent from './components/register'
 
+import GlobalMessageComponent from './components/globalMessages'
+
 export default {
   components: {
     layout: LayoutComponent,
@@ -73,7 +81,8 @@ export default {
     product: ProductComponent,
     cart: CartComponent,
     register: RegisterComponent,
-    order: OrderComponent
+    order: OrderComponent,
+    'global-messages': GlobalMessageComponent
   },
   data: function(){
       return {
@@ -113,6 +122,26 @@ export default {
     },
     loginNav: function (){
       this.logged = true;
+    }
+  },
+  sockets: {
+    connect () {
+      // If user is logged resend the message user_logged
+      if (this.$store.state.currentUser) {
+        this.$socket.emit('user_logged', this.$store.state.currentUser)
+      }
+    },
+    private_message (payload) {
+      this.$toasted.show('Message from "' + payload.user.name +
+        '":<br><br>' + payload.message, { type: 'info' })
+    },
+    destination_user_not_logged (payload) {
+      if(payload.destinationUser.name == undefined){
+        alert('User ID required');
+      }else{
+      this.$toasted.show('User "' + payload.destinationUser.name + '" is not available!',
+        { type: 'warning' })
+      }
     }
   }
 };

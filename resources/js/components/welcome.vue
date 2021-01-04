@@ -2,10 +2,7 @@
   <div class="center">
     <h1>Food Home</h1>
 
-    <div class="btnProductsLogged" v-if="this.logged != false" v-on:click="products">
-      Products
-    </div>
-    <div class="btnProducts" v-if="this.logged == false" v-on:click="products">
+    <div class="btnProductsLogged" v-if="this.logged != false" v-on:click.prevent="products">
       Products
     </div>
 
@@ -18,10 +15,10 @@
       Logout
     </div>
     <!-- reloadPage(); -->
-    <div class="btnLogin" v-if="this.logged == false" v-on:click="login">Login</div>
+    <div class="btnLogin" v-if="this.logged == false" v-on:click.prevent="login">Login</div>
     <div v-if="this.logged == false">
       <h2>Don't have an account?</h2>
-      <div class="btnRegister" v-on:click="register">Register</div>
+      <div class="btnRegister" v-on:click.prevent="register">Register</div>
       <div class="debug" style="user-select: none; pointer-events: none">⠀⠀⠀⠀⠀⠀</div>
     </div>
     <p v-if="this.logged != false" id="text" class="welcomeText">
@@ -78,12 +75,8 @@ export default {
       await axios
         .post("/api/logout")
         .then((response) => {
-          //console.log(this.getCurrentUser)
-          console.log(this.getCurrentUser.logged_at);
           this.getCurrentUser.logged_at = null;
-          //console.log(this.getCurrentUser.logged_at);
-          //this.$store.commit("setUserLoggedAtToNull");
-          //console.log("User has logged out");
+          this.getCurrentUser.available_at = null;
         })
         .catch((error) => {
           console.log("Invalid Logout");
@@ -137,7 +130,6 @@ body {
   background-size: cover;
   font-family: "Oswald", sans-serif;
   -webkit-font-smoothing: antialiased;
-  font-smoothing: antialiased;
 }
 
 h1 {
@@ -238,38 +230,6 @@ h2 {
   color: #10151b;
 }
 
-.btnProducts {
-  position: absolute;
-  margin-bottom: 180px;
-  margin-right: -350px;
-
-  width: 170px;
-  height: 60px;
-  padding: 6px 0 0 3px;
-  border: 2px solid #ffffff;
-  border-radius: 2px;
-  background: none;
-  font-size: 16px;
-  line-height: 45px;
-  color: #fff;
-  text-decoration: none;
-  font-weight: 600;
-  text-transform: uppercase;
-  vertical-align: middle;
-  text-align: center;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  -webkit-transition: background 0.4s, color 0.4s;
-  transition: background 0.4s, color 0.4s;
-  cursor: pointer;
-}
-
-.btnProducts:hover {
-  background: #ffffff;
-  color: #10151b;
-}
-
 .btnLogout {
   position: absolute;
   margin-bottom: -230px;
@@ -302,9 +262,9 @@ h2 {
 
 .btnLogin {
   position: absolute;
-  margin-bottom: 20px;
+  margin-bottom: 100px;
   margin-right: -350px;
-
+ 
   width: 170px;
   height: 60px;
   padding: 6px 0 0 3px;

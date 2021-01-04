@@ -79,6 +79,27 @@ export default new Vuex.Store({
 		totalProduts: null,
 	},
 	mutations: {
+		/* Websockets */
+		clearUser (state) {
+            if (state.currentUser) {
+                this._vm.$socket.emit('user_logged_out', state.currentUser)
+            }
+            state.user = null
+        },
+        setUser (state, user) {
+            // if state.user is the same as the new user, do nothing
+            if (state.currentUser !== user) {
+                if (state.currentUser) {
+                    this._vm.$socket.emit('user_logged_out', state.currentUser)
+                }
+                state.currentUser = user
+                if (state.currentUser) {
+                    this._vm.$socket.emit('user_logged', state.currentUser)
+                }
+            }
+        },
+		/*------------------------*/
+
 		getShoppingCart(state) {
 			state.shoppingCart = JSON.parse(localStorage.getItem('shoppingCart'));
 

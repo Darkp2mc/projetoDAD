@@ -86,7 +86,6 @@
         </tbody>
       </table>
     </div>
-  </div>
 </template>
 
 <script>
@@ -215,9 +214,6 @@ export default {
       };
     },
   },
-  computed: {
-  },
-
   mounted: async function () {
     //this.logout();
     await axios

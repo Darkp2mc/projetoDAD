@@ -23,6 +23,8 @@ class User extends Authenticatable
         'type',
         'blocked',
         'photo_url',
+        'available_at',
+        'logged_at'
     ];
 
     /**
@@ -45,6 +47,8 @@ class User extends Authenticatable
         'created_at'=>'datetime',
         'updated_at'=>'datetime',
         'deleted_at'=>'datetime',
+        'logged_at'=>'datetime',
+        'available_at'=>'datetime'
     ];
 
     

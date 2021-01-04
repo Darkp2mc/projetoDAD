@@ -13,18 +13,6 @@
         value=""
       />
     </div>
-    <div class="form-group">
-      <label for="inputEmail">Email</label>
-      <input
-        type="email"
-        class="form-control"
-        v-model="user.email"
-        name="email"
-        id="inputEmail"
-        placeholder="Email address"
-        value=""
-      />
-    </div>
     
     <div class="form-group">
       <a

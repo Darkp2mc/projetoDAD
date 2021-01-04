@@ -24,7 +24,14 @@
           <td>{{ currentOrder.opened_at }}</td>
           <td>{{ currentOrder.updated_at }}</td>
           <td>{{ currentOrder.notes }}</td>
-          <button class="btn btn-success" v-on:click="finishOrder">Ready</button>
+          <button class="btn btn-success" v-if="!this.isPrepared" v-on:click="prepareOrder">Prepare</button>
+          <button
+            class="btn btn-success"
+            v-if="this.isPrepared == true"
+            v-on:click="finishOrder"
+          >
+            Ready
+          </button>
         </tbody>
         <th>Items in order</th>
         <tr>
@@ -63,8 +70,10 @@ export default {
       successMessage: "",
       failMessage: "",
       logged: false,
+
       ordersList: [],
       currentOrder: null,
+      isPrepared: false,
 
       users: [],
       orderUser: null,
@@ -75,6 +84,8 @@ export default {
 
       productsList: (this.productsList = [...this.$store.state.productList]),
       orderProducts: [],
+
+      delivers: [],
     };
   },
   computed: {
@@ -91,20 +102,20 @@ export default {
   methods: {
     getOrders: async function () {
       //this.$store.commit("getOrders");
-      await axios
-        .get("api/order")
-        .then((response) => {
-          this.ordersList = response.data.data;
-          for (var i = 0; i < this.ordersList.length; i++) {
-            if (this.ordersList[i].status == "H") {
-              this.currentOrder = this.ordersList[i];
-              break;
-            }
+      await axios.get("api/order").then((response) => {
+        this.ordersList = response.data.data;
+        for (var i = 0; i < this.ordersList.length; i++) {
+          if (this.ordersList[i].status == "P") {
+            this.isPrepared = true
+            this.currentOrder = this.ordersList[i];
+            break;
           }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+          if(this.ordersList[i].status == "H" ){
+            this.currentOrder = this.ordersList[i];
+            break;
+          }
+        }
+      });
       await this.getOrderItems();
       await this.getItemInfo();
       await this.getCostumerInfo();
@@ -137,24 +148,103 @@ export default {
         this.orderUser = response.data.data;
       });
     },
-    finishOrder: async function () {
+    prepareOrder: async function () {
+      this.currentOrder.status = "P";
+      await axios.put("api/order/" + this.currentOrder.id, this.currentOrder);
+      this.isPrepared = true;
+    },
+    finishOrder_outdated: async function () {
       var currentdate = new Date();
       this.getCurrentUser;
       this.currentOrder.status = "R";
       this.currentOrder.prepared_by = this.currentUser.id;
-      this.currentOrder.current_status_at = currentdate.getFullYear()+'-'+currentdate.getMonth()+'-'+currentdate.getDate()+' '+currentdate.getHours()+":"+currentdate.getMinutes()+":"+currentdate.getSeconds();
-      
+      this.currentOrder.current_status_at =
+        currentdate.getFullYear() +
+        "-" +
+        currentdate.getMonth() +
+        "-" +
+        currentdate.getDate() +
+        " " +
+        currentdate.getHours() +
+        ":" +
+        currentdate.getMinutes() +
+        ":" +
+        currentdate.getSeconds();
+
       await axios
         .put("/api/order/" + this.currentOrder.id, this.currentOrder)
         .then((response) => {
           //console.log(this.currentOrder)
           //console.log(response);
-          Object.assign(this.currentOrder, response.data.data)
+          Object.assign(this.currentOrder, response.data.data);
         });
       this.currentOrder = null;
       this.$forceUpdate();
     },
 
+    finishOrder: async function () {
+      await this.$confirm(
+        "Are you sure that you want to confirm this order?",
+        "",
+        "warning"
+      ).then(() => {
+        var currentdate = new Date();
+        //pegar nos cooks
+        axios
+          .get("api/users")
+          .then((response) => {
+            this.delivers = response.data.data;
+          })
+          .then(() => {
+            this.filterDelivers();
+            //comparar os available_at (se nao for null)
+            //ordenar o array
+            this.delivers.sort(function (a, b) {
+              return (
+                parseFloat(Date.parse(a.available_at)) -
+                parseFloat(Date.parse(b.available_at))
+              );
+            });
+
+            if (this.delivers.length != 0) {
+              // Se houverem delivers disponíveis
+
+              this.currentOrder.status = "R";
+              this.currentOrder.delivered_by = this.delivers[0].id; // Atualizar na base de dados o valor de quem vai preparar a order
+
+              var payload = {
+                // Informação necessária para a notificação
+                user: { name: "Food@Home" },
+                message: "A new order has arrived!",
+                destination: "delivery",
+                destinationUser: { id: this.delivers[0].id, name: this.delivers[0].name },
+              };
+
+              this.delivers[0].available_at = null; // O Cook fica indisponivel neste momento
+              axios.put("api/users/" + this.delivers[0].id, this.delivers[0]); // Essa informação é atualizada na base de dados
+              axios.put("api/order/"+this.currentOrder.id,this.currentOrder); // Order é atualizada
+              this.$socket.emit("private_message", payload); // É enviada uma notificação ao user a dizer que recebeu uma nova order
+
+              alert("Order confirmed! Delivering...");
+            } else {
+              // Se não houverem Cooks disponíveis, a order é guardada na base de dados, mas não é guardada com
+              // prepared_by e o available_at dos Cooks não são atualizados.
+              alert("No delivers available at the moment. Order is waiting...");
+            }
+          });
+      });
+    },
+    filterDelivers: function () {
+      for (var i = this.delivers.length - 1; i >= 0; i--) {
+        if (
+          this.delivers[i].type != "ED" ||
+          (this.delivers[i].type == "ED" &&
+            (this.delivers[i].available_at == null || this.delivers[i].blocked == 1))
+        ) {
+          this.delivers.splice(i, 1);
+        }
+      }
+    },
     /*
     filterOrder: function () {
       this.getCurrentUser;

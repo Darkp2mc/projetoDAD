@@ -62,12 +62,14 @@ export default {
             else{
               var currentdate = new Date();
               response.data.logged_at = currentdate.getFullYear()+'-'+currentdate.getMonth()+'-'+currentdate.getDate()+' '+currentdate.getHours()+":"+currentdate.getMinutes()+":"+currentdate.getSeconds();
+              response.data.available_at = response.data.logged_at;
+              //console.log("response from login.vue: ")
               //console.log(response.data)
               this.$emit('loginNav', true);
               this.$router.push("/products");
               this.$store.commit('setCurrentUser',response.data);
               this.$store.state.logged = true
-              axios.put("api/users/"+response.data.id, response.data);
+              this.updateTimestamps(response);
             }
           })
           .catch((error) => {
@@ -75,6 +77,10 @@ export default {
           });
       });
     },
+    updateTimestamps: async function(response){
+      console.log(response.data)
+      await axios.put("api/users/"+response.data.id, response.data);
+    }
   },
 };
 </script>

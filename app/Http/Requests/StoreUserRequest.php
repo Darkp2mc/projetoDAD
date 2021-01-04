@@ -29,7 +29,8 @@ class StoreUserRequest extends FormRequest
             'password' => 'required|min:8|confirmed',
             'type' => 'required|[C,EC,ED,EM]',
             'blocked'=>'sometimes',
-            'logged_at'=>'nullable'
+            'logged_at'=>'nullable',
+            'available_at'=>'nullable'
         ];
     }
 }

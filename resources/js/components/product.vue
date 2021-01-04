@@ -82,9 +82,6 @@ export default {
         .then((response) => {
           this.products = response.data.data;
         })
-        .then((response) => {
-          this.$store.commit("setProductList", this.products);
-        });
     },
     pageChangeHandler(selectedPage) {
       this.currentPage = selectedPage;

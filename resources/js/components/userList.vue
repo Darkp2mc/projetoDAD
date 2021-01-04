@@ -9,7 +9,7 @@
           <th>Email</th>
           <th>Department</th>
           <th>Actions</th>
-          <th>Blocked</th>
+          <th>Blocked?</th>
         </tr>
       </thead>
       <tbody>
@@ -23,8 +23,14 @@
           </td>
           <td>{{ user.name }}</td>
           <td>{{ user.email }}</td>
-          <td>{{ user.type }}</td>
-          <td>{{ user.blocked }}</td>
+          
+          <td v-if="user.type == 'EM'">Manager</td>
+          <td v-if="user.type == 'ED'">Delivery</td>
+          <td v-if="user.type == 'EC'">Cook</td>
+          <td v-if="user.type == 'C'">Customer</td>
+
+          <td v-if="user.blocked == 1">Yes</td>
+          <td v-if="user.blocked == 0">No</td>
           <!-- <img :src="'../storage/app/public/fotos/'+user.photo_url"> -->
           <td>
             <a

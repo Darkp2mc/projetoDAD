@@ -1,6 +1,21 @@
 require('./bootstrap')
-
 window.Vue = require('vue')
+
+import VueSocketIO from "vue-socket.io"
+Vue.use(
+    new VueSocketIO({
+        debug: true,
+        connection: "http://127.0.0.1:8080"
+    })
+)
+
+import Toasted from 'vue-toasted'
+Vue.use(Toasted, {
+    position: 'top-center',
+    duration: 5000,
+    type: 'info',
+})
+
 
 import App from './App.vue'
 import VueRouter from 'vue-router'
@@ -22,6 +37,7 @@ import RegisterComponent from './components/register'
 import MyselfEditComponent from './components/myselfEdit.vue'
 import CookComponent from './components/dashboards/cook.vue'
 import DeliveryManComponent from './components/dashboards/deliveryman.vue'
+import GlobalMessagesComponent from './components/globalMessages.vue'
 
 import store from "./stores/global-store"
 
@@ -38,6 +54,7 @@ const routes = [
 	{ path: '/edit_profile', component: MyselfEditComponent , props: true},
 	{ path: '/cook', component: CookComponent, props: true},
 	{ path: '/deliveryman', component: DeliveryManComponent, props: true},
+	{ path: '/chat', component: GlobalMessagesComponent, props: true},
 	{ path: '*', redirect: '/welcome' }
 
 ]
@@ -51,5 +68,17 @@ new Vue({
 	router,
 	render: h => h(App)
 }).$mount('#app')
+
+router.beforeEach((to, from, next) => {
+    console.log(to)
+    if (!store.state.currentUser) {
+        if ((to.path === '/orders') || (to.path === '/edit_profile') || (to.path === '/users') || (to.path === '/cart') || (to.path === '/myself')) {
+            console.log('Não tem permissões')
+            next(false)
+            return
+        }
+    }
+    next()
+})
 
 
